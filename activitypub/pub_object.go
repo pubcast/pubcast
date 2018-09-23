@@ -1,4 +1,8 @@
+package activitypub
+
 import "net/url"
+
+type pubObject struct{}
 
 func (p pubObject) Serialize() (m map[string]interface{}, e error) {
 	panic("not implemented")
@@ -31,4 +35,3 @@ func (p pubObject) AppendType(interface{}) {
 func (p pubObject) RemoveType(int) {
 	panic("not implemented")
 }
-

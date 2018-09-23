@@ -1,3 +1,5 @@
+package activitypub
+
 import (
 	"context"
 	"crypto"
@@ -6,6 +8,7 @@ import (
 
 	"github.com/go-fed/activity/pub"
 	"github.com/go-fed/activity/vocab"
+	"github.com/go-fed/httpsig"
 )
 
 type application struct{}
@@ -53,4 +56,3 @@ func (a application) CanAdd(c context.Context, o vocab.ObjectType, t vocab.Objec
 func (a application) CanRemove(c context.Context, o vocab.ObjectType, t vocab.ObjectType) bool {
 	panic("not implemented")
 }
-
