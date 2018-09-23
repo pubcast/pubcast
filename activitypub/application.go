@@ -13,10 +13,12 @@ import (
 
 type application struct{}
 
+// Determines wether the app owns an IRI, or Internationalized Resource ID
 func (a application) Owns(c context.Context, id *url.URL) bool {
 	panic("not implemented")
 }
 
+// Gets ActivityStream content
 func (a application) Get(c context.Context, id *url.URL, rw pub.RWType) (pub.PubObject, error) {
 	panic("not implemented")
 }
@@ -25,10 +27,12 @@ func (a application) GetAsVerifiedUser(c context.Context, id *url.URL, authdUser
 	panic("not implemented")
 }
 
+// Determines if the app has ActivityStream data at the IRI (Internationalized Resource ID)
 func (a application) Has(c context.Context, id *url.URL) (bool, error) {
 	panic("not implemented")
 }
 
+// Sets the ActivityStream data
 func (a application) Set(c context.Context, o pub.PubObject) error {
 	panic("not implemented")
 }
