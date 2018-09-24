@@ -57,3 +57,4 @@ You send messages called `ActivityStreams` that are really just a special spec o
 - [ActivityPub tutorial](https://raw.githubusercontent.com/w3c/activitypub/gh-pages/activitypub-tutorial.txt)
 - [ActivityPub.rocks explaination](https://activitypub.rocks/)
 - [W3 ActivityPub Spec](https://www.w3.org/TR/activitypub/)
+- [Other Golang implementations of this spec](https://github.com/go-fed/activity#who-is-using-this-library-currently)
