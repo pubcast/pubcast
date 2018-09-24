@@ -66,3 +66,33 @@ You send messages called `ActivityStreams` that are really just a special spec o
 - [ActivityPub.rocks explaination](https://activitypub.rocks/)
 - [W3 ActivityPub Spec](https://www.w3.org/TR/activitypub/)
 - [Other Golang implementations of this spec](https://github.com/go-fed/activity#who-is-using-this-library-currently)
+
+## Design
+
+### Podcast Object
+
+Podcasts include four main pieces of information: the `header` info, the `shownotes`, the `preview`, and the `audio`. A Header includes the title and date of the show. Shownotes are a collection of info about the show; they're basically an HTML supported description. A preview is an image thumbnail for the show. Audio is the actual stuff you're listening to.
+
+A Podcast ActivityStream Object can therefore look something like this:
+
+```json
+"object" : {
+ "id": "https://example.org/activity/organization/npr/planet-money",
+ "type": "Podcast",
+ "name": "This American Life",
+ "date": "2008-09-15T15:53:00",
+ "shownotes": "Check out our <a href='foo.com'>website!</a>",
+ "preview": {
+    "type": "Image",
+    "href": "http://example.org/album/máiréad.jpg",
+    "mediaType": "image/jpeg"
+  },
+  "audio": {
+    "type": "Audio",
+    "href": "https://example.org/activity/organization/npr/planet-money/episodes/1.mp4",
+    "mediaType": "audio/mp4"
+  }
+}
+```
+
+
