@@ -692,24 +692,6 @@ func (sa *SockaddrVM) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrVM, nil
 }
 
-type SockaddrXDP struct {
-	Flags        uint16
-	Ifindex      uint32
-	QueueID      uint32
-	SharedUmemFD uint32
-	raw          RawSockaddrXDP
-}
-
-func (sa *SockaddrXDP) sockaddr() (unsafe.Pointer, _Socklen, error) {
-	sa.raw.Family = AF_XDP
-	sa.raw.Flags = sa.Flags
-	sa.raw.Ifindex = sa.Ifindex
-	sa.raw.Queue_id = sa.QueueID
-	sa.raw.Shared_umem_fd = sa.SharedUmemFD
-
-	return unsafe.Pointer(&sa.raw), SizeofSockaddrXDP, nil
-}
-
 func anyToSockaddr(fd int, rsa *RawSockaddrAny) (Sockaddr, error) {
 	switch rsa.Addr.Family {
 	case AF_NETLINK:
@@ -811,15 +793,6 @@ func anyToSockaddr(fd int, rsa *RawSockaddrAny) (Sockaddr, error) {
 			}
 			return sa, nil
 		}
-	case AF_XDP:
-		pp := (*RawSockaddrXDP)(unsafe.Pointer(rsa))
-		sa := &SockaddrXDP{
-			Flags:        pp.Flags,
-			Ifindex:      pp.Ifindex,
-			QueueID:      pp.Queue_id,
-			SharedUmemFD: pp.Shared_umem_fd,
-		}
-		return sa, nil
 	}
 	return nil, EAFNOSUPPORT
 }
@@ -1315,11 +1288,7 @@ func Mount(source string, target string, fstype string, flags uintptr, data stri
 //sys	Fchownat(dirfd int, path string, uid int, gid int, flags int) (err error)
 //sys	fcntl(fd int, cmd int, arg int) (val int, err error)
 //sys	Fdatasync(fd int) (err error)
-//sys	Fgetxattr(fd int, attr string, dest []byte) (sz int, err error)
-//sys	Flistxattr(fd int, dest []byte) (sz int, err error)
 //sys	Flock(fd int, how int) (err error)
-//sys	Fremovexattr(fd int, attr string) (err error)
-//sys	Fsetxattr(fd int, attr string, dest []byte, flags int) (err error)
 //sys	Fsync(fd int) (err error)
 //sys	Getdents(fd int, buf []byte) (n int, err error) = SYS_GETDENTS64
 //sysnb	Getpgid(pid int) (pgid int, err error)
@@ -1347,7 +1316,6 @@ func Getpgrp() (pid int) {
 //sys	Llistxattr(path string, dest []byte) (sz int, err error)
 //sys	Lremovexattr(path string, attr string) (err error)
 //sys	Lsetxattr(path string, attr string, data []byte, flags int) (err error)
-//sys	MemfdCreate(name string, flags int) (fd int, err error)
 //sys	Mkdirat(dirfd int, path string, mode uint32) (err error)
 //sys	Mknodat(dirfd int, path string, mode uint32, dev int) (err error)
 //sys	Nanosleep(time *Timespec, leftover *Timespec) (err error)
@@ -1359,7 +1327,6 @@ func Getpgrp() (pid int) {
 //sys	read(fd int, p []byte) (n int, err error)
 //sys	Removexattr(path string, attr string) (err error)
 //sys	Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err error)
-//sys	Renameat2(olddirfd int, oldpath string, newdirfd int, newpath string, flags uint) (err error)
 //sys	RequestKey(keyType string, description string, callback string, destRingid int) (id int, err error)
 //sys	Setdomainname(p []byte) (err error)
 //sys	Sethostname(p []byte) (err error)
@@ -1533,7 +1500,11 @@ func Faccessat(dirfd int, path string, mode uint32, flags int) (err error) {
 // EpollPwait
 // EpollWaitOld
 // Execve
+// Fgetxattr
+// Flistxattr
 // Fork
+// Fremovexattr
+// Fsetxattr
 // Futex
 // GetKernelSyms
 // GetMempolicy
