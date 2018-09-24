@@ -3,8 +3,10 @@ package activitypub
 import (
 	"context"
 	"crypto"
+	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/Flaque/metapod/config"
 	"github.com/go-fed/activity/pub"
@@ -32,9 +34,46 @@ func (a application) GetAsVerifiedUser(c context.Context, id *url.URL, authdUser
 	panic("not implemented")
 }
 
+// Deletes empty strings from an array of strings
+// ["", "dogs", "oh"] => ["dogs", "oh"]
+func deleteEmpty(s []string) []string {
+	var r []string
+	for _, str := range s {
+		if str != "" {
+			r = append(r, str)
+		}
+	}
+	return r
+}
+
 // Determines if the app has ActivityStream data at the IRI (Internationalized Resource ID)
+// We expect IRIs to have a path like `/activity/<object>/<value>/<inbox|outbox>`
 func (a application) Has(c context.Context, id *url.URL) (bool, error) {
-	panic("not implemented")
+	fragments := deleteEmpty(strings.Split(id.Path, "/"))
+
+	// Fragments need four pieces "activity", "<object>", "<value>", "inbox or outbox"
+	if len(fragments) != 4 {
+		fmt.Println("length", len(fragments))
+		return false, nil
+	}
+
+	// We only accept paths starting with /activity
+	if fragments[0] != "activity" {
+		return false, nil
+	}
+
+	// Eventually we may support more than just the user object, but for the moment,
+	// this is all we got.
+	if fragments[1] != "user" {
+		return false, nil
+	}
+
+	// The forth piece must be "inbox" or "outbox"
+	if !(fragments[3] == "inbox" || fragments[3] == "outbox") {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 // Sets the ActivityStream data
