@@ -6,16 +6,21 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Flaque/metapod/config"
 	"github.com/go-fed/activity/pub"
 	"github.com/go-fed/activity/vocab"
 	"github.com/go-fed/httpsig"
+	"github.com/spf13/viper"
 )
 
 type application struct{}
 
 // Determines wether the app owns an IRI, or Internationalized Resource ID
 func (a application) Owns(c context.Context, id *url.URL) bool {
-	panic("not implemented")
+	actual := id.Host
+	expected := viper.GetString(config.ServerHostname) + ":" + viper.GetString(config.ServerPort)
+
+	return actual == expected
 }
 
 // Gets ActivityStream content
