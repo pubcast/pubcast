@@ -62,9 +62,9 @@ func (a application) Has(c context.Context, id *url.URL) (bool, error) {
 		return false, nil
 	}
 
-	// Eventually we may support more than just the user object, but for the moment,
+	// Eventually we may support more than just the organization object, but for the moment,
 	// this is all we got.
-	if fragments[1] != "user" {
+	if fragments[1] != "organization" {
 		return false, nil
 	}
 
