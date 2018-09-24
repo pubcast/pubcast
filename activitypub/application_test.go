@@ -40,17 +40,17 @@ func TestHas(t *testing.T) {
 		expected bool
 	}{
 		// Good data
-		{"/activity/user/joey/inbox", true},
-		{"/activity/user/joey/outbox", true},
-		{"/activity/user/sam/inbox", true},
+		{"/activity/organization/joey/inbox", true},
+		{"/activity/organization/joey/outbox", true},
+		{"/activity/organization/sam/inbox", true},
 
 		// Bad data
-		{"/activity/user/joey/something", false},
+		{"/activity/organization/joey/something", false},
 		{"/activity/bad/joey/inbox", false},
-		{"/something/user/joey/inbox", false},
+		{"/something/organization/joey/inbox", false},
 		{"/activity", false},
-		{"/activity/user/", false},
-		{"/activity/user/joey/", false},
+		{"/activity/organization/", false},
+		{"/activity/organization/joey/", false},
 	}
 
 	var base = "https://podocasto.com:8080"
