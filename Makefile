@@ -1,6 +1,6 @@
 PKGS := $(shell go list ./... | grep -v vendor)
 
-build:
+build: test
 	go build
 
 .PHONY: run
