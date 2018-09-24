@@ -4,6 +4,14 @@ An _experimental_ (Read: not-usable or in anyway done) distributed podcasting pl
 
 ## Usage
 
+Getting started:
+
+Install the vendor dependencies using godep. (https://github.com/golang/dep)
+
+```sh
+dep ensure
+```
+
 Building a binary:
 
 ```sh
