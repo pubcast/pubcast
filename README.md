@@ -28,7 +28,7 @@ make test
 
 ### Basic Description
 
-ActivityPub gives every user on a server an "inbox" and an "outbox". But these are really just endpoints:
+ActivityPub gives every user (or `actor` in it's vocab) on a server an "inbox" and an "outbox". But these are really just endpoints:
 
 ```
 https://myactpub.site/activity/user/flaque/inbox
