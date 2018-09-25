@@ -47,7 +47,7 @@ ActivityPub asks that you accept `GET` and `POST` requests to these endpoints wh
 
 You send messages called `ActivityStreams` that are really just a special spec of JSON:
 
-```
+```json
 {"@context": "https://www.w3.org/ns/activitystreams",
  "type": "Create",
  "id": "https://social.example/alyssa/posts/a29a6843-9feb-4c74-a7f7-081b9c9201d3",
@@ -60,6 +60,61 @@ You send messages called `ActivityStreams` that are really just a special spec o
             "content": "Say, did you finish reading that book I lent you?"}
 ```
 
+#### Objects, Actors, and Activities
+
+ActivityPub is based on [a formalized vocabulary](https://www.w3.org/TR/activitystreams-vocabulary/) of data types, actions and folks doing the actions.
+
+An `Object` is a generic data type written in JSON:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Object",
+  "id": "http://www.test.example/object/1",
+  "name": "A Simple, non-specific object"
+}
+```
+
+Objects have [a set collection of formalized properties](https://www.w3.org/TR/activitystreams-vocabulary/#properties) such as `id`, `name`, `url`, etc but you technically can create your own. Objects serve as a base type for other Activity Steam's core set of types. 
+
+For example, there are a set of [actor types](https://www.w3.org/TR/activitystreams-vocabulary/#actor-types) that themselves are `Objects`. 
+
+```json
+/* A "Person" actor type */
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Person",
+  "name": "Sally Smith"
+}
+```
+
+[Activities](https://www.w3.org/TR/activitystreams-vocabulary/#h-activity-types) are also subtypes of `Object`, and are used to describe relationships between objects. Some examples of activities include:
+* Accept
+* Create
+* Move
+* Question
+* Undo
+* Follow 
+* View
+
+An `Activity` json might look something like this:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "summary": "Sally created a note",
+  "type": "Create",
+  "actor": {
+    "type": "Person",
+    "name": "Sally"
+  },
+  "object": {
+    "type": "Note",
+    "name": "A Simple Note",
+    "content": "This is a simple note"
+  }
+}
+```
 
 ### Links
 - [ActivityPub tutorial](https://raw.githubusercontent.com/w3c/activitypub/gh-pages/activitypub-tutorial.txt)
@@ -94,5 +149,4 @@ A Podcast ActivityStream Object can therefore look something like this:
   }
 }
 ```
-
 
