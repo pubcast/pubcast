@@ -43,7 +43,7 @@ https://myactpub.site/activity/user/flaque/inbox
 https://myactpub.site/activity/user/flaque/outbox
 ```
 
-ActivityPub asks that you accept `GET` and `POST` requests to these endpoints where a `POST` tells a the server to put that in a user's queue or feed and `GET` lets the user retrieve info from the feed. 
+ActivityPub asks that you accept `GET` and `POST` requests to these endpoints where a `POST` tells a the server to put that in a user's queue or feed and `GET` lets the user retrieve info from the feed.
 
 You send messages called `ActivityStreams` that are really just a special spec of JSON:
 
@@ -75,9 +75,9 @@ An `Object` is a generic data type written in JSON:
 }
 ```
 
-Objects have [a set collection of formalized properties](https://www.w3.org/TR/activitystreams-vocabulary/#properties) such as `id`, `name`, `url`, etc but you technically can create your own. Objects serve as a base type for other Activity Steam's core set of types. 
+Objects have [a set collection of formalized properties](https://www.w3.org/TR/activitystreams-vocabulary/#properties) such as `id`, `name`, `url`, etc but you technically can create your own. Objects serve as a base type for other Activity Steam's core set of types.
 
-For example, there are a set of [actor types](https://www.w3.org/TR/activitystreams-vocabulary/#actor-types) that themselves are `Objects`. 
+For example, there are a set of [actor types](https://www.w3.org/TR/activitystreams-vocabulary/#actor-types) that themselves are `Objects`.
 
 ```json
 /* A "Person" actor type */
@@ -89,13 +89,14 @@ For example, there are a set of [actor types](https://www.w3.org/TR/activitystre
 ```
 
 [Activities](https://www.w3.org/TR/activitystreams-vocabulary/#h-activity-types) are also subtypes of `Object`, and are used to describe relationships between objects. Some examples of activities include:
-* Accept
-* Create
-* Move
-* Question
-* Undo
-* Follow 
-* View
+
+- Accept
+- Create
+- Move
+- Question
+- Undo
+- Follow
+- View
 
 An `Activity` json might look something like this:
 
@@ -117,6 +118,7 @@ An `Activity` json might look something like this:
 ```
 
 ### Links
+
 - [ActivityPub tutorial](https://raw.githubusercontent.com/w3c/activitypub/gh-pages/activitypub-tutorial.txt)
 - [ActivityPub.rocks explaination](https://activitypub.rocks/)
 - [W3 ActivityPub Spec](https://www.w3.org/TR/activitypub/)
@@ -150,4 +152,3 @@ A Podcast ActivityStream Object can therefore look something like this:
   }
 }
 ```
-
