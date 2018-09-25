@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:152802df79dd154c87e39aa611a3a55db29110f64c8d5b126a7ae8e4cfb31d68"
-  name = "github.com/Flaque/metapod"
-  packages = ["config"]
-  pruneopts = "UT"
-  revision = "c9b72418f30bb13d43f41d4ff2db10ecdca7511d"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -18,12 +10,12 @@
   version = "v1.1.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:b9414457752702c53f6afd3838da3d89b9513ada40cdbe9603bdf54b1ceb5014"
+  digest = "1:abeb38ade3f32a92943e5be54f55ed6d6e3b6602761d74b4aab4c9dd45c18abd"
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   pruneopts = "UT"
-  revision = "ccc981bf80385c528a65fbfdd49bf2d8da22aa23"
+  revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
+  version = "v1.4.7"
 
 [[projects]]
   branch = "master"
@@ -35,7 +27,7 @@
     "vocab",
   ]
   pruneopts = "UT"
-  revision = "d0c1e6a3e37d0e76106b2af14002db4def108492"
+  revision = "c8431878daa83fb2ee9a38ed99b96930ab908bf1"
 
 [[projects]]
   digest = "1:2052597b369aac2bdb522ecd3a0e8873396a354667dc4273965cb46eaa35c816"
@@ -46,8 +38,7 @@
   version = "v0.1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:ae22a88db2b2ed901a45665953afeb80410413edd27557e15e535b21f48a3622"
+  digest = "1:c0d19ab64b32ce9fe5cf4ddceba78d5bc9807f0016db6b1183599da3dcc24d10"
   name = "github.com/hashicorp/hcl"
   packages = [
     ".",
@@ -62,7 +53,8 @@
     "json/token",
   ]
   pruneopts = "UT"
-  revision = "65a6292f0157eff210d03ed1bf6c59b190b8b906"
+  revision = "8cb6e5b959231cc1119e43259c4a608f9c51a241"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:c568d7727aa262c32bdf8a3f7db83614f7af0ed661474b24588de635c20024c7"
@@ -81,12 +73,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:ef3bd3b7c86390b39ea690a4861215484475033b1113e57c9f61bae6ee30fba5"
+  digest = "1:95741de3af260a92cc5c7f3f3061e85273f5a81b5db20d4bd68da74bd521675e"
   name = "github.com/pelletier/go-toml"
   packages = ["."]
   pruneopts = "UT"
-  revision = "78b76feda6f35b2c5c1d283513f6419e59086729"
+  revision = "c01d1270ff3e442a8a57cddc1c92dc1138598194"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -124,12 +116,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:c1b1102241e7f645bc8e0c22ae352e8f0dc6484b6cb4d132fa9f24174e0119e2"
+  digest = "1:dab83a1bbc7ad3d7a6ba1a1cc1760f25ac38cdf7d96a5cdd55cd915a4f5ceaf9"
   name = "github.com/spf13/pflag"
   packages = ["."]
   pruneopts = "UT"
-  revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  revision = "9a97c102cda95a86cec2345a6f09f55a939babf5"
+  version = "v1.0.2"
 
 [[projects]]
   branch = "master"
@@ -148,6 +140,7 @@
   version = "v1.2.2"
 
 [[projects]]
+  branch = "master"
   digest = "1:e56c4d696485f9fdbd3eb439fd82c6bcbd6d3e28f0de9e5b2556bb02affabd26"
   name = "golang.org/x/crypto"
   packages = [
@@ -157,21 +150,21 @@
     "sha3",
   ]
   pruneopts = "UT"
-  revision = "c126467f60eb25f8f27e5a981f32a87e3965053f"
+  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
-  digest = "1:5a955fee84608f39d7d6474a62cc8d5ec3f4a311b7f21e79c2ba4e1e16169d34"
+  branch = "master"
+  digest = "1:6631e3f0d4e7128eee65ec2cb4fe53dc0746f83b8fdccb97f403b80e0f44ac52"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
     "unix",
   ]
   pruneopts = "UT"
-  revision = "bd9dbc187b6e1dacfdd2722a87e83093c2d7bd6e"
+  revision = "b09afc3d579e346c4a7e4705953acaf6f9e551bd"
 
 [[projects]]
-  branch = "master"
-  digest = "1:a6077a0495d0a12e18c13681d6a0a43780572dac7644560d4deea5375a20b897"
+  digest = "1:8029e9743749d4be5bc9f7d42ea1659471767860f0cdc34d37c3111bd308a295"
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
@@ -182,7 +175,8 @@
     "unicode/norm",
   ]
   pruneopts = "UT"
-  revision = "905a57155faa8230500121607930ebb9dd8e139c"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
@@ -196,7 +190,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/Flaque/metapod/config",
     "github.com/go-fed/activity/pub",
     "github.com/go-fed/activity/streams",
     "github.com/go-fed/activity/vocab",

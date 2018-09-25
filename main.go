@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	log.Println("running")
 	http.HandleFunc("/health", helloWorldHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

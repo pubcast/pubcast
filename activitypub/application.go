@@ -8,10 +8,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Flaque/metapod/config"
 	"github.com/go-fed/activity/pub"
 	"github.com/go-fed/activity/vocab"
 	"github.com/go-fed/httpsig"
+	"github.com/metapods/metapods/config"
 	"github.com/spf13/viper"
 )
 

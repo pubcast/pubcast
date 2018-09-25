@@ -22,7 +22,7 @@
 *.swp
 
 # binary
-metapod
+metapods
 
 # vendor dir
 vendor/

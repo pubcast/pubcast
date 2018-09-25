@@ -11,12 +11,7 @@ import (
 	"time"
 )
 
-const (
-	tagFieldName    = "toml"
-	tagFieldComment = "comment"
-	tagCommented    = "commented"
-	tagMultiline    = "multiline"
-)
+const tagKeyMultiline = "multiline"
 
 type tomlOpts struct {
 	name      string
@@ -34,20 +29,6 @@ type encOpts struct {
 
 var encOptsDefaults = encOpts{
 	quoteMapKeys: false,
-}
-
-type annotation struct {
-	tag       string
-	comment   string
-	commented string
-	multiline string
-}
-
-var annotationDefault = annotation{
-	tag:       tagFieldName,
-	comment:   tagFieldComment,
-	commented: tagCommented,
-	multiline: tagMultiline,
 }
 
 var timeType = reflect.TypeOf(time.Time{})
@@ -164,15 +145,13 @@ func Marshal(v interface{}) ([]byte, error) {
 type Encoder struct {
 	w io.Writer
 	encOpts
-	annotation
 }
 
 // NewEncoder returns a new encoder that writes to w.
 func NewEncoder(w io.Writer) *Encoder {
 	return &Encoder{
-		w:          w,
-		encOpts:    encOptsDefaults,
-		annotation: annotationDefault,
+		w:       w,
+		encOpts: encOptsDefaults,
 	}
 }
 
@@ -218,30 +197,6 @@ func (e *Encoder) ArraysWithOneElementPerLine(v bool) *Encoder {
 	return e
 }
 
-// SetTagName allows changing default tag "toml"
-func (e *Encoder) SetTagName(v string) *Encoder {
-	e.tag = v
-	return e
-}
-
-// SetTagComment allows changing default tag "comment"
-func (e *Encoder) SetTagComment(v string) *Encoder {
-	e.comment = v
-	return e
-}
-
-// SetTagCommented allows changing default tag "commented"
-func (e *Encoder) SetTagCommented(v string) *Encoder {
-	e.commented = v
-	return e
-}
-
-// SetTagMultiline allows changing default tag "multiline"
-func (e *Encoder) SetTagMultiline(v string) *Encoder {
-	e.multiline = v
-	return e
-}
-
 func (e *Encoder) marshal(v interface{}) ([]byte, error) {
 	mtype := reflect.TypeOf(v)
 	if mtype.Kind() != reflect.Struct {
@@ -272,7 +227,7 @@ func (e *Encoder) valueToTree(mtype reflect.Type, mval reflect.Value) (*Tree, er
 	case reflect.Struct:
 		for i := 0; i < mtype.NumField(); i++ {
 			mtypef, mvalf := mtype.Field(i), mval.Field(i)
-			opts := tomlOptions(mtypef, e.annotation)
+			opts := tomlOptions(mtypef)
 			if opts.include && (!opts.omitempty || !isZero(mvalf)) {
 				val, err := e.valueToToml(mtypef.Type, mvalf)
 				if err != nil {
@@ -371,7 +326,7 @@ func (e *Encoder) valueToToml(mtype reflect.Type, mval reflect.Value) (interface
 // Neither Unmarshaler interfaces nor UnmarshalTOML functions are supported for
 // sub-structs, and only definite types can be unmarshaled.
 func (t *Tree) Unmarshal(v interface{}) error {
-	d := Decoder{tval: t, tagName: tagFieldName}
+	d := Decoder{tval: t}
 	return d.unmarshal(v)
 }
 
@@ -407,7 +362,6 @@ type Decoder struct {
 	r    io.Reader
 	tval *Tree
 	encOpts
-	tagName string
 }
 
 // NewDecoder returns a new decoder that reads from r.
@@ -415,7 +369,6 @@ func NewDecoder(r io.Reader) *Decoder {
 	return &Decoder{
 		r:       r,
 		encOpts: encOptsDefaults,
-		tagName: tagFieldName,
 	}
 }
 
@@ -430,12 +383,6 @@ func (d *Decoder) Decode(v interface{}) error {
 		return err
 	}
 	return d.unmarshal(v)
-}
-
-// SetTagName allows changing default tag "toml"
-func (d *Decoder) SetTagName(v string) *Decoder {
-	d.tagName = v
-	return d
 }
 
 func (d *Decoder) unmarshal(v interface{}) error {
@@ -463,8 +410,7 @@ func (d *Decoder) valueFromTree(mtype reflect.Type, tval *Tree) (reflect.Value, 
 		mval = reflect.New(mtype).Elem()
 		for i := 0; i < mtype.NumField(); i++ {
 			mtypef := mtype.Field(i)
-			an := annotation{tag: d.tagName}
-			opts := tomlOptions(mtypef, an)
+			opts := tomlOptions(mtypef)
 			if opts.include {
 				baseKey := opts.name
 				keysToTry := []string{baseKey, strings.ToLower(baseKey), strings.ToTitle(baseKey)}
@@ -569,7 +515,7 @@ func (d *Decoder) valueFromToml(mtype reflect.Type, tval interface{}) (reflect.V
 			if !val.Type().ConvertibleTo(mtype) {
 				return reflect.ValueOf(nil), fmt.Errorf("Can't convert %v(%T) to %v", tval, tval, mtype.String())
 			}
-			if reflect.Indirect(reflect.New(mtype)).OverflowInt(val.Convert(mtype).Int()) {
+			if reflect.Indirect(reflect.New(mtype)).OverflowInt(val.Int()) {
 				return reflect.ValueOf(nil), fmt.Errorf("%v(%T) would overflow %v", tval, tval, mtype.String())
 			}
 
@@ -579,11 +525,10 @@ func (d *Decoder) valueFromToml(mtype reflect.Type, tval interface{}) (reflect.V
 			if !val.Type().ConvertibleTo(mtype) {
 				return reflect.ValueOf(nil), fmt.Errorf("Can't convert %v(%T) to %v", tval, tval, mtype.String())
 			}
-
-			if val.Convert(reflect.TypeOf(int(1))).Int() < 0 {
+			if val.Int() < 0 {
 				return reflect.ValueOf(nil), fmt.Errorf("%v(%T) is negative so does not fit in %v", tval, tval, mtype.String())
 			}
-			if reflect.Indirect(reflect.New(mtype)).OverflowUint(uint64(val.Convert(mtype).Uint())) {
+			if reflect.Indirect(reflect.New(mtype)).OverflowUint(uint64(val.Int())) {
 				return reflect.ValueOf(nil), fmt.Errorf("%v(%T) would overflow %v", tval, tval, mtype.String())
 			}
 
@@ -593,7 +538,7 @@ func (d *Decoder) valueFromToml(mtype reflect.Type, tval interface{}) (reflect.V
 			if !val.Type().ConvertibleTo(mtype) {
 				return reflect.ValueOf(nil), fmt.Errorf("Can't convert %v(%T) to %v", tval, tval, mtype.String())
 			}
-			if reflect.Indirect(reflect.New(mtype)).OverflowFloat(val.Convert(mtype).Float()) {
+			if reflect.Indirect(reflect.New(mtype)).OverflowFloat(val.Float()) {
 				return reflect.ValueOf(nil), fmt.Errorf("%v(%T) would overflow %v", tval, tval, mtype.String())
 			}
 
@@ -614,15 +559,15 @@ func (d *Decoder) unwrapPointer(mtype reflect.Type, tval interface{}) (reflect.V
 	return mval, nil
 }
 
-func tomlOptions(vf reflect.StructField, an annotation) tomlOpts {
-	tag := vf.Tag.Get(an.tag)
+func tomlOptions(vf reflect.StructField) tomlOpts {
+	tag := vf.Tag.Get("toml")
 	parse := strings.Split(tag, ",")
 	var comment string
-	if c := vf.Tag.Get(an.comment); c != "" {
+	if c := vf.Tag.Get("comment"); c != "" {
 		comment = c
 	}
-	commented, _ := strconv.ParseBool(vf.Tag.Get(an.commented))
-	multiline, _ := strconv.ParseBool(vf.Tag.Get(an.multiline))
+	commented, _ := strconv.ParseBool(vf.Tag.Get("commented"))
+	multiline, _ := strconv.ParseBool(vf.Tag.Get(tagKeyMultiline))
 	result := tomlOpts{name: vf.Name, comment: comment, commented: commented, multiline: multiline, include: true, omitempty: false}
 	if parse[0] != "" {
 		if parse[0] == "-" && len(parse) == 1 {

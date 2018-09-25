@@ -5,7 +5,7 @@ build: test
 
 .PHONY: run
 run: build
-	@metapod
+	./metapods
 
 .PHONY: test
 test:

@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/Flaque/metapod/config"
+	"github.com/metapods/metapods/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
