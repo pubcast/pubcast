@@ -120,6 +120,7 @@ An `Activity` json might look something like this:
 - [ActivityPub tutorial](https://raw.githubusercontent.com/w3c/activitypub/gh-pages/activitypub-tutorial.txt)
 - [ActivityPub.rocks explaination](https://activitypub.rocks/)
 - [W3 ActivityPub Spec](https://www.w3.org/TR/activitypub/)
+- [W3 ActivityPub Vocabulary Spec](https://www.w3.org/TR/activitystreams-vocabulary/)
 - [Other Golang implementations of this spec](https://github.com/go-fed/activity#who-is-using-this-library-currently)
 
 ## Design
