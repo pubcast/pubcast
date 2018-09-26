@@ -154,3 +154,7 @@ A Podcast ActivityStream Object can therefore look something like this:
   }
 }
 ```
+
+----
+
+If you're in the states, make sure you're [registered to vote](https://www.vote.org/register-to-vote/) in November for the oldest federation there is! 🇺🇸
