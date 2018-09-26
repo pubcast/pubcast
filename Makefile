@@ -10,3 +10,7 @@ run: build
 .PHONY: test
 test:
 	go test $(PKGS)
+
+.PHONY: create-migration
+migration:
+	migrate create -dir db/migrations -ext sql $$NAME
