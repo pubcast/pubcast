@@ -11,6 +11,20 @@ run: build
 test:
 	go test $(PKGS)
 
-.PHONY: create-migration
+.PHONY: migration
 migration:
 	migrate create -dir db/migrations -ext sql $$NAME
+
+.PHONY: database
+database:
+	./scripts/create_db.sh
+
+.PHONY: migrate-up
+migrate-up: database
+	# We use ?sslmode=disable to accommodate for crappy brew installs
+	migrate -source file://db/migrations -database postgres://localhost:5432/metapods?sslmode=disable up
+	@echo "✨ Finished."
+
+.PHONY: drop-database
+drop-database:
+	psql -U postgres -c "drop database metapods"

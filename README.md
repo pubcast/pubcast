@@ -32,6 +32,12 @@ Running tests:
 make test
 ```
 
+Setting up your database:
+
+```sh
+make database
+```
+
 Creating a new migration in `db/migrations`:
 
 ```sh

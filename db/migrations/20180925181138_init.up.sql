@@ -1,3 +1,5 @@
+BEGIN;
+
 -- Automatic updated_at
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
@@ -15,7 +17,7 @@ CREATE TABLE "groups"
     "name" VARCHAR(512) NOT NULL,
     "note" TEXT DEFAULT '',
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 --- Set timestamps for groups
@@ -23,6 +25,7 @@ CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON "groups"
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
+
 
 -- Organizations Table
 CREATE TABLE "organizations"
@@ -33,7 +36,7 @@ CREATE TABLE "organizations"
     "note" TEXT DEFAULT '',
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "group_id" INT references groups(id) ON DELETE CASCADE
+    "group_id" INT REFERENCES groups(id) ON DELETE CASCADE
 );
 
 --- Set timestamps for organizations
@@ -55,7 +58,7 @@ CREATE TABLE "podcasts"
     "posted_at" TIMESTAMPTZ NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "organization_id" INT references organizations(id) ON DELETE CASCADE
+    "organization_id" INT REFERENCES organizations(id) ON DELETE CASCADE
 );
 
 --- Set timestamps for podcasts
@@ -63,3 +66,5 @@ CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON "podcasts"
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
+
+COMMIT;
