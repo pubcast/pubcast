@@ -28,3 +28,4 @@ migrate-up: database
 .PHONY: drop-database
 drop-database:
 	psql -U postgres -c "drop database metapods"
+	psql -U postgres -c "drop database metapods_test"

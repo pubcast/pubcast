@@ -1,12 +1,15 @@
 package models
 
-import "github.com/metapods/metapods/data/marshal"
+import (
+	"database/sql"
+
+	"github.com/metapods/metapods/data/marshal"
+)
 
 // Group is a collection of Organizations
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-group
 // Also refers to the Groups table in the database
 type Group struct {
-	ID        int                     `json:"id"`
 	Slug      string                  `json:"slug"`
 	Name      string                  `json:"name"`
 	Note      string                  `json:"note"`
@@ -14,11 +17,32 @@ type Group struct {
 	UpdatedAt marshal.MarshalableTime `json:"updated_at"`
 }
 
+func (g Group) Put(db *sql.DB, name string, note string) (*Group, error) {
+	// todo Insert group; use slugify to create slug
+}
+
+// Get returns a single Group object or nil
+func (g Group) Get(db *sql.DB, slug string) (*Group, error) {
+	row := db.QueryRow(`
+		select slug, name, note, created_at, updated_at
+		from groups;
+	`)
+
+	group := &Group{}
+	err := row.Scan(&group.Slug,
+		&group.Name, &group.Note, &group.CreatedAt, &group.UpdatedAt)
+
+	if err != sql.ErrNoRows {
+		return nil, nil
+	}
+
+	return group, err
+}
+
 // Organization is someone who owns a episodes of podcasts
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-organization
 // Also refers to the Organizations table in the database
 type Organization struct {
-	ID        int                     `json:"id"`
 	Slug      string                  `json:"slug"`
 	Name      string                  `json:"name"`
 	Note      string                  `json:"note"`
@@ -29,7 +53,6 @@ type Organization struct {
 // Podcast is a something with an audio link, a name, and a note
 // Refers to the Podcasts table in the database
 type Podcast struct {
-	ID           int                     `json:"id"`
 	Slug         string                  `json:"slug"`
 	Name         string                  `json:"name"`
 	Note         string                  `json:"note"`
