@@ -13,7 +13,7 @@ test:
 
 .PHONY: migration
 migration:
-	migrate create -dir db/migrations -ext sql $$NAME
+	migrate create -dir data/migrations -ext sql $$NAME
 
 .PHONY: database
 database:
@@ -22,7 +22,7 @@ database:
 .PHONY: migrate-up
 migrate-up: database
 	# We use ?sslmode=disable to accommodate for crappy brew installs
-	migrate -source file://db/migrations -database postgres://localhost:5432/metapods?sslmode=disable up
+	migrate -source file://data/migrations -database postgres://localhost:5432/metapods?sslmode=disable up
 	@echo "✨ Finished."
 
 .PHONY: drop-database
