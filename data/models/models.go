@@ -17,10 +17,6 @@ type Group struct {
 	UpdatedAt marshal.MarshalableTime `json:"updated_at"`
 }
 
-// func PutGroup(db *sql.DB, name string, note string) (*Group, error) {
-// 	// todo Insert group; use slugify to create slug
-// }
-
 // GetGroup returns a single Group object or nil
 func GetGroup(db *sql.DB, slug string) (*Group, error) {
 	row := db.QueryRow(`
