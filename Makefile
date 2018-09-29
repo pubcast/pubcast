@@ -11,6 +11,10 @@ run: build
 test:
 	go test $(PKGS)
 
+$(GOPATH)/bin/migrate:
+	@go get -u github.com/golang-migrate/migrate/cli
+	@go build -o $(GOPATH)/bin/migrate github.com/golang-migrate/migrate/cli
+
 .PHONY: migration
 migration:
 	migrate create -dir data/migrations -ext sql $$NAME
@@ -20,7 +24,7 @@ database:
 	./scripts/create_db.sh
 
 .PHONY: migrate-up
-migrate-up: database
+migrate-up: database $(GOPATH)/bin/migrate
 	# We use ?sslmode=disable to accommodate for crappy brew installs
 	migrate -source file://data/migrations -database postgres://localhost:5432/metapods?sslmode=disable up
 	migrate -source file://data/migrations -database postgres://localhost:5432/metapods_test?sslmode=disable up
