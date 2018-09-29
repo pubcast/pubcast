@@ -2,13 +2,21 @@ package activitypub
 
 import (
 	"context"
+	"log"
 	"net/url"
 	"testing"
 
+	_ "github.com/DATA-DOG/go-txdb"
 	"github.com/metapods/metapods/config"
+	"github.com/metapods/metapods/data"
+	"github.com/metapods/metapods/data/models"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	data.RegisterTestDB()
+}
 
 func TestOwnsCanConformToTheConfig(t *testing.T) {
 
@@ -34,7 +42,7 @@ func TestOwnsFailsWithWrongHostname(t *testing.T) {
 	assert.False(t, doesOwn, "Owns returns false if the url doesnt match the config")
 }
 
-func TestHas(t *testing.T) {
+func TestMatchesURLSpec(t *testing.T) {
 	var tests = []struct {
 		path     string
 		expected bool
@@ -43,6 +51,9 @@ func TestHas(t *testing.T) {
 		{"/activity/organization/joey/inbox", true},
 		{"/activity/organization/joey/outbox", true},
 		{"/activity/organization/sam/inbox", true},
+		{"/activity/group/joey/inbox", true},
+		{"/activity/group/joey/outbox", true},
+		{"/activity/group/sam/inbox", true},
 
 		// Bad data
 		{"/activity/organization/joey/something", false},
@@ -57,8 +68,42 @@ func TestHas(t *testing.T) {
 
 	for _, row := range tests {
 		u, _ := url.Parse(base + row.path)
-		doesMatch, err := application.Has(application{}, context.TODO(), u)
-		assert.Nil(t, err, "Has should not fail")
+		doesMatch := matchesURLSpec(u)
 		assert.Equal(t, row.expected, doesMatch, row.path+" failed")
 	}
+}
+
+func TestHasFailsIfNothingExists(t *testing.T) {
+
+	db, err := data.InitNewTestDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	var base = "https://podocasto.com:8080"
+	u, _ := url.Parse(base + "/activity/group/sam/inbox")
+
+	val, err := application.Has(application{}, context.TODO(), u)
+	assert.Nil(t, err)
+	assert.False(t, val)
+}
+
+func TestHasPassesIfSomethingExists(t *testing.T) {
+	db, err := data.InitNewTestDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Dummy data
+	slug, err := models.PutGroup(db, "joeboe", "woo")
+	assert.Nil(t, err)
+
+	var base = "https://podocasto.com:8080"
+	u, _ := url.Parse(base + "/activity/group/" + slug + "/inbox")
+
+	val, err := application.Has(application{}, context.TODO(), u)
+	assert.Nil(t, err)
+	assert.True(t, val)
 }

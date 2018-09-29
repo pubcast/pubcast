@@ -29,6 +29,10 @@ func GetGroup(db *sql.DB, slug string) (*Group, error) {
 	err := row.Scan(&group.Slug,
 		&group.Name, &group.Note, &group.CreatedAt, &group.UpdatedAt)
 
+	// This is not an error from the user's perspective
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}
