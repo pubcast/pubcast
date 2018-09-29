@@ -32,6 +32,18 @@ Running tests:
 make test
 ```
 
+Setting up your database:
+
+```sh
+make database
+```
+
+Creating a new migration in `db/migrations`:
+
+```sh
+make migration NAME=some_name_here
+```
+
 ## Learning about ActivityPub
 
 ![explaination](https://i.imgur.com/ShgecWe.png)
@@ -155,6 +167,6 @@ A Podcast ActivityStream Object can therefore look something like this:
 }
 ```
 
-----
+---
 
 If you're in the states, make sure you're [registered to vote](https://www.vote.org/register-to-vote/) in November for the oldest federation there is! 🇺🇸

@@ -1,3 +1,10 @@
 language: go
 go:
   - "1.11"
+
+services:
+  - postgresql
+
+before_script:
+  - make database
+  - make migrate-up
