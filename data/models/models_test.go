@@ -33,6 +33,7 @@ func TestGetGroup(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
 	// Populate the db with some dummy data
 	query := `
@@ -49,4 +50,22 @@ func TestGetGroup(t *testing.T) {
 	assert.Equal(t, "dog", group.Slug, "Group slug should match")
 	assert.Equal(t, "Corgies", group.Name, "Group name should match")
 	assert.Equal(t, "I like pups", group.Note, "Group note should match")
+}
+
+func TestPutGroup(t *testing.T) {
+	db, err := sql.Open("txdb", "identifier")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	slug, err := PutGroup(db, "hats and ;DROP TABLES", "<html>oh boy</html>")
+	assert.Nil(t, err)
+
+	group, err := GetGroup(db, slug)
+	assert.Nil(t, err)
+
+	assert.Equal(t, slug, group.Slug)
+	assert.Equal(t, "hats and ;DROP TABLES", group.Name)
+	assert.Equal(t, "<html>oh boy</html>", group.Note)
 }

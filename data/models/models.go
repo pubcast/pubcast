@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 
+	slugify "github.com/gosimple/slug"
 	"github.com/metapods/metapods/data/marshal"
 )
 
@@ -33,6 +34,19 @@ func GetGroup(db *sql.DB, slug string) (*Group, error) {
 	}
 
 	return &group, nil
+}
+
+// PutGroup creates a group with this name and note
+func PutGroup(db *sql.DB, name string, note string) (string, error) {
+	slug := slugify.MakeLang(name, "en")
+
+	query := `
+		INSERT INTO groups (slug, name, note)
+		VALUES ($1, $2, $3)
+	`
+
+	_, err := db.Exec(query, slug, name, note)
+	return slug, err
 }
 
 // Organization is someone who owns a episodes of podcasts
