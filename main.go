@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	log.Println("running")
-	http.HandleFunc("/health", helloWorldHandler)
+
+	http.HandleFunc("/health", healthHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
+func healthHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "🎙")
 }

@@ -1,7 +1,6 @@
 package activitypub
 
 import (
-	"context"
 	"log"
 	"net/url"
 	"testing"
@@ -26,7 +25,7 @@ func TestOwnsCanConformToTheConfig(t *testing.T) {
 
 	u, _ := url.Parse("https://bestjeanist.com:8080")
 
-	doesOwn := application.Owns(application{}, context.TODO(), u)
+	doesOwn := Owns(u)
 	assert.True(t, doesOwn, "Owns should returns true if the url matches the config")
 }
 
@@ -38,7 +37,7 @@ func TestOwnsFailsWithWrongHostname(t *testing.T) {
 
 	u, _ := url.Parse("https://goodboys.com:8080")
 
-	doesOwn := application.Owns(application{}, context.TODO(), u)
+	doesOwn := Owns(u)
 	assert.False(t, doesOwn, "Owns returns false if the url doesnt match the config")
 }
 
@@ -84,7 +83,7 @@ func TestHasFailsIfNothingExists(t *testing.T) {
 	var base = "https://podocasto.com:8080"
 	u, _ := url.Parse(base + "/activity/group/sam/inbox")
 
-	val, err := application.Has(application{}, context.TODO(), u)
+	val, err := Has(u)
 	assert.Nil(t, err)
 	assert.False(t, val)
 }
@@ -103,7 +102,7 @@ func TestHasPassesIfSomethingExists(t *testing.T) {
 	var base = "https://podocasto.com:8080"
 	u, _ := url.Parse(base + "/activity/group/" + slug + "/inbox")
 
-	val, err := application.Has(application{}, context.TODO(), u)
+	val, err := Has(u)
 	assert.Nil(t, err)
 	assert.True(t, val)
 }
