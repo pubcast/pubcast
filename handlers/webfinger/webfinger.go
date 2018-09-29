@@ -18,8 +18,9 @@ and possibly other sites.
 
 package webfinger
 
-import "net/url"
+import "net/http"
 
-func Get(id *url.URL) {
+// Get returns a webfinger response
+func Get(w http.ResponseWriter, r *http.Request) {
 
 }
