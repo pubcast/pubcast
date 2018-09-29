@@ -11,7 +11,10 @@ run: build
 test:
 	go test $(PKGS)
 
-$(GOPATH)/bin/migrate:
+$(GOPATH)/bin/dep:
+	@go get -u github.com/golang/dep/cmd/dep
+
+$(GOPATH)/bin/migrate: $(GOPATH)/bin/dep
 	@go get -u github.com/golang-migrate/migrate/cli
 	@cd $(GOPATH)/src/github.com/golang-migrate/migrate/cli
 	@dep ensure
