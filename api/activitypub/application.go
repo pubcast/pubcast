@@ -12,6 +12,8 @@ import (
 	"github.com/go-fed/activity/vocab"
 	"github.com/go-fed/httpsig"
 	"github.com/metapods/metapods/config"
+	db "github.com/metapods/metapods/data"
+	"github.com/metapods/metapods/data/models"
 	"github.com/spf13/viper"
 )
 
@@ -46,30 +48,55 @@ func deleteEmpty(s []string) []string {
 	return r
 }
 
-// Determines if the app has ActivityStream data at the IRI (Internationalized Resource ID)
-// We expect IRIs to have a path like `/activity/<object>/<value>/<inbox|outbox>`
-func (a application) Has(c context.Context, id *url.URL) (bool, error) {
+func matchesURLSpec(id *url.URL) bool {
 	fragments := deleteEmpty(strings.Split(id.Path, "/"))
 
 	// Fragments need four pieces "activity", "<object>", "<value>", "inbox or outbox"
 	if len(fragments) != 4 {
 		fmt.Println("length", len(fragments))
-		return false, nil
+		return false
 	}
 
 	// We only accept paths starting with /activity
 	if fragments[0] != "activity" {
-		return false, nil
+		return false
 	}
 
-	// Eventually we may support more than just the organization object, but for the moment,
-	// this is all we got.
-	if fragments[1] != "organization" {
-		return false, nil
+	// The ActivityStreams object we're trying to reference
+	object := fragments[1]
+	if !(object == "organization" || object == "group") {
+		return false
 	}
 
 	// The forth piece must be "inbox" or "outbox"
 	if !(fragments[3] == "inbox" || fragments[3] == "outbox") {
+		return false
+	}
+
+	return true
+}
+
+func getSlug(id *url.URL) string {
+	fragments := deleteEmpty(strings.Split(id.Path, "/"))
+	if len(fragments) != 4 {
+		return "" // Likely bad.
+	}
+
+	return fragments[2]
+}
+
+// Determines if the app has ActivityStream data at the IRI (Internationalized Resource ID)
+// We expect IRIs to have a path like `/activity/<object>/<value>/<inbox|outbox>`
+func (a application) Has(c context.Context, id *url.URL) (bool, error) {
+	if !matchesURLSpec(id) {
+		return false, nil
+	}
+
+	group, err := models.GetGroup(db.Pool, getSlug(id))
+	if err != nil {
+		return false, err
+	}
+	if group == nil {
 		return false, nil
 	}
 
