@@ -17,26 +17,26 @@ type Group struct {
 	UpdatedAt marshal.MarshalableTime `json:"updated_at"`
 }
 
-func (g Group) Put(db *sql.DB, name string, note string) (*Group, error) {
-	// todo Insert group; use slugify to create slug
-}
+// func PutGroup(db *sql.DB, name string, note string) (*Group, error) {
+// 	// todo Insert group; use slugify to create slug
+// }
 
-// Get returns a single Group object or nil
-func (g Group) Get(db *sql.DB, slug string) (*Group, error) {
+// GetGroup returns a single Group object or nil
+func GetGroup(db *sql.DB, slug string) (*Group, error) {
 	row := db.QueryRow(`
 		select slug, name, note, created_at, updated_at
 		from groups;
 	`)
 
-	group := &Group{}
+	var group Group
 	err := row.Scan(&group.Slug,
 		&group.Name, &group.Note, &group.CreatedAt, &group.UpdatedAt)
 
-	if err != sql.ErrNoRows {
-		return nil, nil
+	if err != nil {
+		return nil, err
 	}
 
-	return group, err
+	return &group, nil
 }
 
 // Organization is someone who owns a episodes of podcasts
