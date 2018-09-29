@@ -13,7 +13,7 @@ test:
 
 $(GOPATH)/bin/migrate:
 	@go get -u github.com/golang-migrate/migrate/cli
-	@cd $GOPATH/src/github.com/golang-migrate/migrate/cli
+	@cd $(GOPATH)/src/github.com/golang-migrate/migrate/cli
 	@dep ensure
 	@go build -tags 'postgres' -o $(GOPATH)/bin/migrate github.com/golang-migrate/migrate/cli
 
