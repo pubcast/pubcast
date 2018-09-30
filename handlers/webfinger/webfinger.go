@@ -18,9 +18,23 @@ and possibly other sites.
 
 package webfinger
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+)
 
 // Get returns a webfinger response
 func Get(w http.ResponseWriter, r *http.Request) {
+	str, err := json.Marshal(Actor{
+		Subject: "acct:bob@foo.dogs.com",
+		Links: []Link{
+			{Rel: "self", Type: "application/activity+json", HREF: "https://my-example.com/actor"},
+		},
+	})
 
+	if err != nil {
+		panic(err)
+	}
+
+	w.Write(str)
 }
