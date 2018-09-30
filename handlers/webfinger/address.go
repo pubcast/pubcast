@@ -44,9 +44,12 @@ func atAddress(address string) (*Actor, error) {
 	//   and then just return a reference so we can get it again?"
 	//
 	// You would be right.
-	_, err = models.GetOrganization(data.GetPool(), slug)
+	org, err := models.GetOrganization(data.GetPool(), slug)
 	if err != nil {
 		return nil, err
+	}
+	if org == nil {
+		return nil, nil
 	}
 
 	domain := "https://" + viper.GetString(config.ServerHostname) +
