@@ -10,9 +10,21 @@ import (
 )
 
 var (
-	// Pool is the pool opened for the database
-	Pool *sql.DB
+	// pool is the pool opened for the database
+	pool *sql.DB
 )
+
+// GetPool is a safer interface for accessing the Pool
+func GetPool() *sql.DB {
+	if pool == nil {
+		panic("GetPool() was used before the data.pool was defined." +
+			" In other words, we can't connect to the database!" +
+			" If this is happening in a test, did you use SetupTestDB() and" +
+			" maybe ConnectToTestDB() in your func init()?")
+	}
+
+	return pool
+}
 
 // NewDB opens a standard DB
 func NewDB() (*sql.DB, error) {
@@ -31,9 +43,9 @@ func NewDB() (*sql.DB, error) {
 	return sql.Open("postgres", psqlInfo)
 }
 
-// RegisterTestDB is used to setup a transactional database.
+// SetupTestDB is used to setup a transactional database.
 // Use it inside of an `init` function in a test file.
-func RegisterTestDB() {
+func SetupTestDB() {
 	const (
 		host   = "localhost"
 		port   = 5432
@@ -54,17 +66,15 @@ func NewTestDB() (*sql.DB, error) {
 	return sql.Open("txdb", "identifier")
 }
 
-// InitNewTestDB creates a new test db pool and sets it to data.Pool
-// Call this if you're using data.Pool somewhere and want your test
+// ConnectToTestDB creates a new test db pool and sets it to data.pool
+// Call this if you're using data.pool somewhere inside a function and want your test
 // to use our test db.
-//
-// If you're trying to use this and
-func InitNewTestDB() (*sql.DB, error) {
+func ConnectToTestDB() (*sql.DB, error) {
 	db, err := NewTestDB()
 	if err != nil {
 		return db, err
 	}
 
-	Pool = db
+	pool = db
 	return db, nil
 }
