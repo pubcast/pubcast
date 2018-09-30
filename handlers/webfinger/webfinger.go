@@ -20,18 +20,53 @@ package webfinger
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+	"strings"
 )
+
+func getAddressFromResource(resource string) (string, error) {
+	fragments := strings.Split(resource, ":")
+	if fragments[0] != "acct" {
+		return "", errors.New("resource did not start with 'acct:'")
+	}
+
+	return fragments[1], nil
+}
 
 // Get returns a webfinger response
 func Get(w http.ResponseWriter, r *http.Request) {
-	str, err := json.Marshal(Actor{
-		Subject: "acct:bob@foo.dogs.com",
-		Links: []Link{
-			{Rel: "self", Type: "application/activity+json", HREF: "https://my-example.com/actor"},
-		},
-	})
 
+	// expect a request like ?resource=acct:joe@example.org
+	resource := r.URL.Query().Get("resource")
+	if resource == "" {
+		http.Error(w, "missing 'resource' query parameter in webfinger", http.StatusBadRequest)
+		return
+	}
+
+	// acct:foo@dogs.com => foo@dogs.com
+	address, err := getAddressFromResource(resource)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	actor, err := atAddress(address)
+	if err != nil {
+
+		// Poor formated errors are user errors (ie: 400)
+		if _, ok := err.(*badAddressError); ok {
+			http.Error(w, "incorrect address format", http.StatusBadRequest)
+			return
+		}
+
+		// other errors are just 500s
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	str, err := json.Marshal(actor)
+
+	// This _really_ should not happen.
 	if err != nil {
 		panic(err)
 	}

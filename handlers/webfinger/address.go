@@ -9,7 +9,6 @@ Combined with webfinger, this is the outside world's way of finding a particular
 package webfinger
 
 import (
-	"errors"
 	"net/mail"
 	"strings"
 
@@ -18,6 +17,18 @@ import (
 	"github.com/metapods/metapods/data/models"
 	"github.com/spf13/viper"
 )
+
+type badAddressError struct {
+	address string
+}
+
+func (e *badAddressError) Error() string {
+	return "badly formatted address: " + e.address
+}
+
+func newBadAddressError(address string) *badAddressError {
+	return &badAddressError{address: address}
+}
 
 // slugOf gets the "slug" of an address; which is just the part to the left of the @.
 // So for `planet-money@foo.org`, the slug would be `planet-money`.
@@ -33,7 +44,7 @@ func atAddress(address string) (*Actor, error) {
 	parser := mail.AddressParser{}
 	_, err := parser.Parse(address)
 	if err != nil {
-		return nil, errors.New("badly formatted address")
+		return nil, newBadAddressError(address)
 	}
 
 	// 99pi@blah.org => 99pi
