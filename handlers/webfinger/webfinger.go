@@ -62,6 +62,12 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 		// other errors are just 500s
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// 404s
+	if actor == nil {
+		http.Error(w, "no such account", http.StatusNotFound)
 	}
 
 	str, err := json.Marshal(actor)
