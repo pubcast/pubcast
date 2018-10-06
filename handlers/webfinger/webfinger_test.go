@@ -8,8 +8,10 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/metapods/metapods/config"
 	"github.com/metapods/metapods/data"
 	"github.com/metapods/metapods/data/models"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,21 +54,32 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	}
 	defer db.Close()
 
+	// Setup Config
+	viper.SetDefault(config.ServerHostname, "localhost")
+	viper.SetDefault(config.ServerPort, "8080")
+
+	// Setup a dummy organization
 	slug, err := models.PutOrganization(db, "slurp", "bloop")
 	assert.Equal(t, "slurp", slug) // sanity test
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
+	// Query they webfinger endpoint
 	query := "?resource=acct:" + slug + "@fooman.org"
-
 	r := httptest.NewRequest("GET",
 		"https://localhost:8080/.well-known/webfinger"+query, nil)
 	w := httptest.NewRecorder()
-
 	Get(w, r)
 
+	// Expect a _valid_ response (good status code, correct format, etc)
 	assert.Equal(t, 200, w.Code)
+	assert.True(t, len(w.Body.String()) > 0)
 
-	var org models.Organization
-	json.Unmarshal(w.Body.Bytes(), &org)
-
+	// Expect a _correct_ response (actually returns the same org that we put in)
+	var actor Actor
+	err = json.Unmarshal(w.Body.Bytes(), &actor)
+	assert.NoError(t, err)
+	assert.Equal(t, slug+"@fooman.org", actor.Subject)
+	assert.Equal(t, "https://localhost:8080/activity/organizations/slurp", actor.Links[0].HREF)
+	assert.Equal(t, "self", actor.Links[0].Rel)
+	assert.Equal(t, "application/activity+json", actor.Links[0].Type)
 }
