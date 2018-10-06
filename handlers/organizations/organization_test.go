@@ -50,10 +50,10 @@ func TestGetOrganization(t *testing.T) {
 
 	// Setup a dummy router
 	router := mux.NewRouter()
-	router.HandleFunc("/org/{slug}", Get)
+	router.HandleFunc("/api/org/{slug}", Get)
 
 	// GET the /org
-	r := httptest.NewRequest("GET", "https://localhost:8080/org/"+slug, nil)
+	r := httptest.NewRequest("GET", "https://localhost:8080/api/org/"+slug, nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 

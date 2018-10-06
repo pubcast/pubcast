@@ -2,14 +2,17 @@ package webfinger
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"github.com/metapods/metapods/config"
 	"github.com/metapods/metapods/data"
 	"github.com/metapods/metapods/data/models"
+	"github.com/metapods/metapods/handlers/organizations"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,6 +54,7 @@ func TestWebfingerBadRequests(t *testing.T) {
 	}
 }
 
+// Tests the _entirety_ of a successful webfinger request.
 func TestWebfingerSuccessfulRequest(t *testing.T) {
 	db, err := data.ConnectToTestDB()
 	if err != nil {
@@ -64,7 +68,8 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	viper.SetDefault(config.ServerPort, "8080")
 
 	// Setup a dummy organization
-	slug, err := models.PutOrganization(db, "slurp", "bloop")
+	note := "bloop"
+	slug, err := models.PutOrganization(db, "slurp", note)
 	assert.Equal(t, "slurp", slug) // sanity test
 	assert.NoError(t, err)
 
@@ -84,7 +89,27 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &actor)
 	assert.NoError(t, err)
 	assert.Equal(t, slug+"@fooman.org", actor.Subject)
-	assert.Equal(t, "https://localhost:8080/activity/organizations/slurp", actor.Links[0].HREF)
+	assert.Equal(t, "https://localhost:8080/api/org/slurp", actor.Links[0].HREF)
 	assert.Equal(t, "self", actor.Links[0].Rel)
 	assert.Equal(t, "application/activity+json", actor.Links[0].Type)
+
+	// Now check that correct response to also be queryable
+	// This effectively completes the handshake and assures
+	// our interoperability with other services.
+	r = httptest.NewRequest("GET", actor.Links[0].HREF, nil)
+	w = httptest.NewRecorder()
+	router := mux.NewRouter()
+	fmt.Println(actor.Links[0].HREF)
+	router.HandleFunc("/api/org/{slug}", organizations.Get)
+	router.ServeHTTP(w, r)
+
+	// Expect a reasonable response from the org
+	assert.Equal(t, 200, w.Code)
+
+	// Finally, check that we can correctly get an organization
+	var org models.Organization
+	err = json.Unmarshal(w.Body.Bytes(), &org)
+	assert.NoError(t, err, w.Body.String()+" \n--failed to unmarshal")
+	assert.Equal(t, slug, org.Slug)
+	assert.Equal(t, note, org.Note)
 }

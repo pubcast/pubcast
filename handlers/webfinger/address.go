@@ -72,7 +72,7 @@ func atAddress(address string) (*Actor, error) {
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				HREF: domain + "/activity/organizations/" + slug,
+				HREF: domain + "/api/org/" + slug,
 			},
 		},
 	}, nil

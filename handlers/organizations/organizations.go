@@ -12,7 +12,7 @@ import (
 // Get returns an Organization
 //
 // Expects a `{slug}` url variable
-// in the route: `/organizations/{slug}`
+// in the route: `/api/org/{slug}`
 func Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
