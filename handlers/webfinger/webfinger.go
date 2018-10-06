@@ -70,12 +70,13 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no such account", http.StatusNotFound)
 	}
 
-	str, err := json.Marshal(actor)
+	bytes, err := json.Marshal(actor)
 
 	// This _really_ should not happen.
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	w.Write(str)
+	w.Write(bytes)
 }

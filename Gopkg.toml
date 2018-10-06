@@ -24,15 +24,6 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/go-fed/activity"
-
-[[constraint]]
-  name = "github.com/go-fed/httpsig"
-  version = "0.1.0"
-
 [[constraint]]
   branch = "master"
   name = "github.com/spf13/viper"

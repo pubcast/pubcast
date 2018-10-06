@@ -2,20 +2,20 @@ package models
 
 import (
 	"database/sql"
+	"time"
 
 	slugify "github.com/gosimple/slug"
-	"github.com/metapods/metapods/data/marshal"
 )
 
 // Group is a collection of Organizations
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-group
 // Also refers to the Groups table in the database
 type Group struct {
-	Slug      string                  `json:"slug"`
-	Name      string                  `json:"name"`
-	Note      string                  `json:"note"`
-	CreatedAt marshal.MarshalableTime `json:"created_at"`
-	UpdatedAt marshal.MarshalableTime `json:"updated_at"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	Note      string    `json:"note"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // GetGroup returns a single Group object or nil
@@ -57,11 +57,11 @@ func PutGroup(db *sql.DB, name string, note string) (string, error) {
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-organization
 // Also refers to the Organizations table in the database
 type Organization struct {
-	Slug      string                  `json:"slug"`
-	Name      string                  `json:"name"`
-	Note      string                  `json:"note"`
-	CreatedAt marshal.MarshalableTime `json:"created_at"`
-	UpdatedAt marshal.MarshalableTime `json:"updated_at"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	Note      string    `json:"note"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // GetOrganization gets an organization at any slug
@@ -102,13 +102,13 @@ func PutOrganization(db *sql.DB, name string, note string) (string, error) {
 // Podcast is a something with an audio link, a name, and a note
 // Refers to the Podcasts table in the database
 type Podcast struct {
-	Slug         string                  `json:"slug"`
-	Name         string                  `json:"name"`
-	Note         string                  `json:"note"`
-	ThumbnailURL string                  `json:"thumbnail_url"`
-	AudioURL     string                  `json:"audio_url"`
-	MediaType    string                  `json:"media_type"`
-	PostedAt     marshal.MarshalableTime `json:"posted_at"`
-	CreatedAt    marshal.MarshalableTime `json:"created_at"`
-	UpdatedAt    marshal.MarshalableTime `json:"updated_at"`
+	Slug         string    `json:"slug"`
+	Name         string    `json:"name"`
+	Note         string    `json:"note"`
+	ThumbnailURL string    `json:"thumbnail_url"`
+	AudioURL     string    `json:"audio_url"`
+	MediaType    string    `json:"media_type"`
+	PostedAt     time.Time `json:"posted_at"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
