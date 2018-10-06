@@ -57,6 +57,14 @@ func SetupTestDB() {
 		"dbname=%s sslmode=disable",
 		host, port, user, dbname)
 
+	// Don't register the transactional db driver
+	// if we've already registered it somewhere
+	for _, driver := range sql.Drivers() {
+		if driver == "txdb" {
+			return
+		}
+	}
+
 	// we register an sql driver named "txdb"
 	txdb.Register("txdb", "postgres", psqlInfo)
 }

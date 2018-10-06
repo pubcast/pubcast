@@ -2,7 +2,6 @@ package webfinger
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -15,10 +14,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func init() {
+	data.SetupTestDB()
+}
+
 func TestWebfingerBadRequests(t *testing.T) {
 	db, err := data.ConnectToTestDB()
 	if err != nil {
-		log.Fatal(err)
+		assert.NoError(t, err)
+		return
 	}
 	defer db.Close()
 
@@ -50,7 +54,8 @@ func TestWebfingerBadRequests(t *testing.T) {
 func TestWebfingerSuccessfulRequest(t *testing.T) {
 	db, err := data.ConnectToTestDB()
 	if err != nil {
-		log.Fatal(err)
+		assert.NoError(t, err)
+		return
 	}
 	defer db.Close()
 

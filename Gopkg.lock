@@ -20,20 +20,22 @@
   version = "v1.4.7"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/go-fed/activity"
-  packages = [
-    "pub",
-    "streams",
-    "vocab"
-  ]
-  revision = "c8431878daa83fb2ee9a38ed99b96930ab908bf1"
+  name = "github.com/gorilla/context"
+  packages = ["."]
+  revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
+  version = "v1.1.1"
 
 [[projects]]
-  name = "github.com/go-fed/httpsig"
+  name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "873e213d286ac718216301404ec48d923c0dd1e8"
-  version = "v0.1.0"
+  revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
+  version = "v1.6.2"
+
+[[projects]]
+  name = "github.com/gosimple/slug"
+  packages = ["."]
+  revision = "91d42f4c3433698e88e87b17a3efbfe40b67c323"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/hashicorp/hcl"
@@ -86,6 +88,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/rainycape/unidecode"
+  packages = ["."]
+  revision = "cb7f23ec59bec0d61b19c56cd88cee3d0cc1870c"
+
+[[projects]]
   name = "github.com/spf13/afero"
   packages = [
     ".",
@@ -126,22 +134,8 @@
 
 [[projects]]
   branch = "master"
-  name = "golang.org/x/crypto"
-  packages = [
-    "blake2b",
-    "blake2s",
-    "ripemd160",
-    "sha3"
-  ]
-  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/sys"
-  packages = [
-    "cpu",
-    "unix"
-  ]
+  packages = ["unix"]
   revision = "b09afc3d579e346c4a7e4705953acaf6f9e551bd"
 
 [[projects]]
@@ -166,6 +160,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "61bcb6c1fd83fe3188849942bceee6978e46e14d06878e0bb8efcf62e6752e58"
+  inputs-digest = "867520e4c27dccb1691d4ccf17e628390cf44890a688e673c87a5c27af9cb673"
   solver-name = "gps-cdcl"
   solver-version = 1
