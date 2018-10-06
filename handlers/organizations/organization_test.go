@@ -15,6 +15,25 @@ func init() {
 	data.SetupTestDB()
 }
 
+func TestGetOrganizationGives404s(t *testing.T) {
+	db, err := data.ConnectToTestDB()
+	if err != nil {
+		assert.NoError(t, err)
+		return
+	}
+	defer db.Close()
+
+	// Setup a dummy router
+	router := mux.NewRouter()
+	router.HandleFunc("/org/{slug}", Get)
+
+	// Try and expect a 404
+	r := httptest.NewRequest("GET", "https://localhost:8080/org/i-dont-exist", nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, r)
+	assert.Equal(t, 404, w.Code)
+}
+
 func TestGetOrganization(t *testing.T) {
 	db, err := data.ConnectToTestDB()
 	if err != nil {
