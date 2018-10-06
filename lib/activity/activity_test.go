@@ -1,4 +1,4 @@
-package activitypub
+package activity
 
 import (
 	"log"
@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	data.RegisterTestDB()
+	data.SetupTestDB()
 }
 
 func TestOwnsCanConformToTheConfig(t *testing.T) {
@@ -74,7 +74,7 @@ func TestMatchesURLSpec(t *testing.T) {
 
 func TestHasFailsIfNothingExists(t *testing.T) {
 
-	db, err := data.InitNewTestDB()
+	db, err := data.ConnectToTestDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -89,7 +89,7 @@ func TestHasFailsIfNothingExists(t *testing.T) {
 }
 
 func TestHasPassesIfSomethingExists(t *testing.T) {
-	db, err := data.InitNewTestDB()
+	db, err := data.ConnectToTestDB()
 	if err != nil {
 		log.Fatal(err)
 	}
