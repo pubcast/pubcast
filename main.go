@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -14,8 +15,10 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/.well-known/webfinger", webfinger.Get).Methods("GET")
 	r.HandleFunc("/api/org/{slug}", organizations.Get).Methods("GET")
+	r.HandleFunc("/health", healthHandler)
 
-	http.HandleFunc("/health", healthHandler)
+	fmt.Println("Serving on port :8080")
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
