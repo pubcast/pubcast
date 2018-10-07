@@ -33,7 +33,7 @@ func NewDB() (*sql.DB, error) {
 		host   = "localhost"
 		port   = 5432
 		user   = "postgres"
-		dbname = "metapods"
+		dbname = "pubcast"
 	)
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -50,7 +50,7 @@ func SetupTestDB() {
 		host   = "localhost"
 		port   = 5432
 		user   = "postgres"
-		dbname = "metapods_test"
+		dbname = "pubcast_test"
 	)
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+

@@ -5,7 +5,7 @@ build: test
 
 .PHONY: run
 run: build
-	./metapods
+	./pubcast
 
 .PHONY: test
 test:
@@ -32,11 +32,11 @@ database:
 .PHONY: migrate-up
 migrate-up: database $(GOPATH)/bin/migrate
 	# We use ?sslmode=disable to accommodate for crappy brew installs
-	migrate -source file://data/migrations -database postgres://localhost:5432/metapods?sslmode=disable up
-	migrate -source file://data/migrations -database postgres://localhost:5432/metapods_test?sslmode=disable up
+	migrate -source file://data/migrations -database postgres://localhost:5432/pubcast?sslmode=disable up
+	migrate -source file://data/migrations -database postgres://localhost:5432/pubcast_test?sslmode=disable up
 	@echo "✨ Finished."
 
 .PHONY: drop-database
 drop-database:
-	psql -U postgres -c "drop database metapods"
-	psql -U postgres -c "drop database metapods_test"
+	psql -U postgres -c "drop database pubcast"
+	psql -U postgres -c "drop database pubcast_test"

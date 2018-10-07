@@ -9,10 +9,10 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/metapods/metapods/config"
-	"github.com/metapods/metapods/data"
-	"github.com/metapods/metapods/data/models"
-	"github.com/metapods/metapods/handlers/organizations"
+	"github.com/pubcast/pubcast/config"
+	"github.com/pubcast/pubcast/data"
+	"github.com/pubcast/pubcast/data/models"
+	"github.com/pubcast/pubcast/handlers/organizations"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

@@ -12,9 +12,9 @@ import (
 	"net/mail"
 	"strings"
 
-	"github.com/metapods/metapods/config"
-	"github.com/metapods/metapods/data"
-	"github.com/metapods/metapods/data/models"
+	"github.com/pubcast/pubcast/config"
+	"github.com/pubcast/pubcast/data"
+	"github.com/pubcast/pubcast/data/models"
 	"github.com/spf13/viper"
 )
 
