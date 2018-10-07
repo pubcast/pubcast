@@ -3,10 +3,13 @@ package organizations
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 	"github.com/metapods/metapods/data"
 	"github.com/metapods/metapods/data/models"
+	"github.com/metapods/metapods/handlers"
+	"github.com/metapods/metapods/lib/activity"
 )
 
 // Get returns an Organization
@@ -42,8 +45,12 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Convert to an ActivityPub object
+	url, err := url.Parse(handlers.GetFullHostname() + "/api/org/" + slug)
+	actor := activity.NewOrganization(org.Name, url)
+
 	// Turn the org into JSON
-	bytes, err := json.Marshal(org)
+	bytes, err := json.Marshal(actor)
 
 	// 500 because something went wrong marshaling the org
 	if err != nil {

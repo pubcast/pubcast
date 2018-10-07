@@ -12,10 +12,9 @@ import (
 	"net/mail"
 	"strings"
 
-	"github.com/metapods/metapods/config"
 	"github.com/metapods/metapods/data"
 	"github.com/metapods/metapods/data/models"
-	"github.com/spf13/viper"
+	"github.com/metapods/metapods/handlers"
 )
 
 type badAddressError struct {
@@ -63,8 +62,7 @@ func atAddress(address string) (*Actor, error) {
 		return nil, nil
 	}
 
-	domain := "https://" + viper.GetString(config.ServerHostname) +
-		":" + viper.GetString(config.ServerPort)
+	domain := handlers.GetFullHostname()
 
 	return &Actor{
 		Subject: address,
