@@ -6,4 +6,6 @@ COPY . .
 RUN go get -d -v ./...
 RUN go install -v ./...
 
-CMD ["metapods"]
+ENTRYPOINT /go/bin/metapods
+
+EXPOSE 8080

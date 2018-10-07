@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Println("Serving on port :8080")
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
