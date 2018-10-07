@@ -112,4 +112,5 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &org)
 	assert.NoError(t, err, w.Body.String()+" \n--failed to unmarshal")
 	assert.Equal(t, slug, org.Name)
+	assert.Equal(t, "https://www.w3.org/ns/activitystreams", org.Context)
 }
