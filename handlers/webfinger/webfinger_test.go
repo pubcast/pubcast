@@ -13,6 +13,7 @@ import (
 	"github.com/metapods/metapods/data"
 	"github.com/metapods/metapods/data/models"
 	"github.com/metapods/metapods/handlers/organizations"
+	"github.com/metapods/metapods/lib/activity"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -107,9 +108,8 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 
 	// Finally, check that we can correctly get an organization
-	var org models.Organization
+	var org activity.Organization
 	err = json.Unmarshal(w.Body.Bytes(), &org)
 	assert.NoError(t, err, w.Body.String()+" \n--failed to unmarshal")
-	assert.Equal(t, slug, org.Slug)
-	assert.Equal(t, note, org.Note)
+	assert.Equal(t, slug, org.Name)
 }
