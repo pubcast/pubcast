@@ -22,6 +22,9 @@
 *.swp
 
 # binary
+pubcast
+
+# the old binary name for pubcast
 metapods
 
 # vendor dir

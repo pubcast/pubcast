@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/metapods/metapods/handlers/organizations"
-	"github.com/metapods/metapods/handlers/webfinger"
+	"github.com/pubcast/pubcast/handlers/organizations"
+	"github.com/pubcast/pubcast/handlers/webfinger"
 )
 
 func main() {

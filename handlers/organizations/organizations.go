@@ -6,10 +6,10 @@ import (
 	"net/url"
 
 	"github.com/gorilla/mux"
-	"github.com/metapods/metapods/data"
-	"github.com/metapods/metapods/data/models"
-	"github.com/metapods/metapods/handlers"
-	"github.com/metapods/metapods/lib/activity"
+	"github.com/pubcast/pubcast/data"
+	"github.com/pubcast/pubcast/data/models"
+	"github.com/pubcast/pubcast/handlers"
+	"github.com/pubcast/pubcast/lib/activity"
 )
 
 // Get returns an Organization

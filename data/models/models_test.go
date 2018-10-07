@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-	"github.com/metapods/metapods/data"
+	"github.com/pubcast/pubcast/data"
 	"github.com/stretchr/testify/assert"
 )
 
