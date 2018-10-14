@@ -29,8 +29,14 @@ func main() {
 	n.Use(negronilogrus.NewMiddleware())
 	n.UseHandler(r)
 
-	log.WithField("port", "8080").Info("starting pubcast api server")
-	log.Fatal(http.ListenAndServe(":8080", n))
+	// Add support for PORT env
+	port := "8080"
+	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
+		port = fromEnv
+	}
+
+	log.WithField("port", port).Info("starting pubcast api server")
+	log.Fatal(http.ListenAndServe(":"+port, n))
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
