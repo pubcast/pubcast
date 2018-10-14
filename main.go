@@ -1,15 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"io"
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/pubcast/pubcast/handlers/organizations"
 	"github.com/pubcast/pubcast/handlers/webfinger"
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/negroni"
 )
+
+func init() {
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+}
 
 func main() {
 	r := mux.NewRouter()
@@ -17,9 +25,12 @@ func main() {
 	r.HandleFunc("/api/org/{slug}", organizations.Get).Methods("GET")
 	r.HandleFunc("/health", healthHandler)
 
-	fmt.Println("Serving on port :8080")
+	n := negroni.New()
+	n.Use(negronilogrus.NewMiddleware())
+	n.UseHandler(r)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.WithField("port", "8080").Info("starting pubcast api server")
+	log.Fatal(http.ListenAndServe(":8080", n))
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {

@@ -55,20 +55,20 @@ drop-database:
 # ----- Docker ----- #
 
 NAME := pubcast/pubcast
-TAG := $$(git log -1 --pretty=%h)
+TAG := $(shell git log -1 --pretty=%h)
 IMG := ${NAME}:${TAG}
 LATEST := ${NAME}:latest
 
 # Makes a new docker image
 image: 
-	@docker build -t ${IMG}
-	@docker tag ${IMG} ${LATEST}
+	docker build -t ${IMG} .
+	docker tag ${IMG} ${LATEST}
 
 # Pushes an existing image to dockerhub
 push-image:
-	@docker push ${NAME}
+	docker push ${NAME}
 
 # Logs us in to dockerhub
 # Requires the env variables DOCKER_USER and DOCKER_PASS
 docker-login:
-	@docker log -u ${DOCKER_USER} -p ${DOCKER_PASS}
+	docker log -u ${DOCKER_USER} -p ${DOCKER_PASS}
