@@ -1,5 +1,9 @@
 
+**NOTE**:
+
 This project has been more/less abandoned. I didn't have the time I wanted to commit to this. If you're interested in this project, you're free to reuse the code, the name and the concept. 
+
+---
 
 
 # 🎙 Pubcast
