@@ -1,3 +1,7 @@
+
+This project has been more/less abandoned. I didn't have the time I wanted to commit to this. If you're interested in this project, you're free to reuse the code, the name and the concept. 
+
+
 # 🎙 Pubcast
 
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/metapodcasts)
@@ -167,6 +171,3 @@ A Podcast ActivityStream Object can therefore look something like this:
 }
 ```
 
----
-
-If you're in the states, make sure you're [registered to vote](https://www.vote.org/register-to-vote/) in November for the oldest federation there is! 🇺🇸
