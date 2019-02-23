@@ -22,7 +22,13 @@ Ensure that you're using go11 with go-modules turned on.
 export GO111MODULE=on
 ```
 
-Building a binary:
+Clone/Download the project with:
+
+```sh
+go get -u github.com/pubcast/pubcast
+```
+
+Building a binary with make:
 
 ```sh
 make
