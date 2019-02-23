@@ -19,7 +19,7 @@ Getting started:
 Ensure that you're using go11 with go-modules turned on.
 
 ```sh
-export GO111MODULE=on
+export GO111MODULE=on # Put this in your .zshrc or .bash_profile or whatnot
 ```
 
 Clone/Download the project with:
