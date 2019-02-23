@@ -4,6 +4,7 @@ require (
 	github.com/DATA-DOG/go-txdb v0.1.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.4.7
+	github.com/golang-migrate/migrate v3.5.4+incompatible // indirect
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/mux v1.6.2
 	github.com/gosimple/slug v1.2.0
