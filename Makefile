@@ -18,7 +18,7 @@ test:
 # ----- Database ----- # 
 
 # Installs our db migration tool
-$(GOPATH)/bin/migrate: $(GOPATH)/bin/dep
+$(GOPATH)/bin/migrate:
 	@go get -u github.com/lib/pq
 	@go get -u github.com/golang-migrate/migrate/cli
 	@cd $(GOPATH)/src/github.com/golang-migrate/migrate/cli
