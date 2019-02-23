@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/pubcast/pubcast/activity"
 	"github.com/pubcast/pubcast/data"
 	"github.com/pubcast/pubcast/data/models"
-	"github.com/pubcast/pubcast/lib/activity"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -9,11 +9,11 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/pubcast/pubcast/activity"
 	"github.com/pubcast/pubcast/config"
 	"github.com/pubcast/pubcast/data"
 	"github.com/pubcast/pubcast/data/models"
 	"github.com/pubcast/pubcast/handlers/organizations"
-	"github.com/pubcast/pubcast/lib/activity"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
