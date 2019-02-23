@@ -3,6 +3,9 @@ package data
 import (
 	"database/sql"
 	"fmt"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	// TODO: move this to a main package
 	txdb "github.com/DATA-DOG/go-txdb"
@@ -77,12 +80,10 @@ func NewTestDB() (*sql.DB, error) {
 // ConnectToTestDB creates a new test db pool and sets it to data.pool
 // Call this if you're using data.pool somewhere inside a function and want your test
 // to use our test db.
-func ConnectToTestDB() (*sql.DB, error) {
+func ConnectToTestDB(t *testing.T) *sql.DB {
 	db, err := NewTestDB()
-	if err != nil {
-		return db, err
-	}
+	assert.NoError(t, err)
 
 	pool = db
-	return db, nil
+	return db
 }
