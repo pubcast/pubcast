@@ -28,7 +28,7 @@ Clone/Download the project with:
 go get -u github.com/pubcast/pubcast
 ```
 
-Building a binary with make:
+Building a binary with make (or [mmake](https://github.com/tj/mmake) if you're fancy):
 
 ```sh
 make
