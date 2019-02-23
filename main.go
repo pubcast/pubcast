@@ -23,6 +23,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/.well-known/webfinger", webfinger.Get).Methods("GET")
 	r.HandleFunc("/api/org/{slug}", organizations.Get).Methods("GET")
+	r.HandleFunc("/api/org", organizations.Create).Methods("POST")
 	r.HandleFunc("/health", healthHandler)
 
 	n := negroni.New()

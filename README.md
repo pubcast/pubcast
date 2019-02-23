@@ -25,7 +25,7 @@ export GO111MODULE=on # Put this in your .zshrc or .bash_profile or whatnot
 Clone/Download the project with:
 
 ```sh
-go get -u github.com/pubcast/pubcast
+go get github.com/pubcast/pubcast
 ```
 
 Building a binary with make (or [mmake](https://github.com/tj/mmake) if you're fancy):

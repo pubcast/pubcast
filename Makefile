@@ -35,7 +35,6 @@ database:
 	./scripts/create_db.sh
 
 # Migrates the database up to the newest version
-.PHONY: migrate-up
 migrate-up: database $(GOPATH)/bin/migrate
 	# We use ?sslmode=disable to accommodate for crappy brew installs
 	migrate -source file://data/migrations -database postgres://localhost:5432/pubcast?sslmode=disable up
