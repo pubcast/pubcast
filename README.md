@@ -46,7 +46,7 @@ Running tests:
 make test
 ```
 
-Setting up your database:
+Setting up your database (this works best if you have postgres already [running locally](https://postgresapp.com/)):
 
 ```sh
 make database
