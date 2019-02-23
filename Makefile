@@ -14,9 +14,6 @@ run: build
 test:
 	go test $(PKGS) -cover
 
-# Installs go dep
-$(GOPATH)/bin/dep:
-	@go get -u github.com/golang/dep/cmd/dep
 
 # ----- Database ----- # 
 
@@ -25,7 +22,6 @@ $(GOPATH)/bin/migrate: $(GOPATH)/bin/dep
 	@go get -u github.com/lib/pq
 	@go get -u github.com/golang-migrate/migrate/cli
 	@cd $(GOPATH)/src/github.com/golang-migrate/migrate/cli
-	@dep ensure
 	@go build -tags 'postgres' -o $(GOPATH)/bin/migrate github.com/golang-migrate/migrate/cli
 
 # Creates a new sql migration file in ./data/migrations

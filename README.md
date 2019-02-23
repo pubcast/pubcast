@@ -1,4 +1,3 @@
-
 **NOTE**:
 
 ~This project has been more/less abandoned. I didn't have the time I wanted to commit to this. If you're interested in this project, you're free to reuse the code, the name and the concept.~
@@ -6,7 +5,6 @@
 I have more time now and am partially reviving this project.
 
 ---
-
 
 # 🎙 Pubcast
 
@@ -18,10 +16,10 @@ An _experimental_ (Read: not-usable or in anyway done) distributed/federated pod
 
 Getting started:
 
-Install the vendor dependencies using godep. (https://github.com/golang/dep)
+Ensure that you're using go11 with go-modules turned on.
 
 ```sh
-dep ensure
+export GO111MODULE=on
 ```
 
 Building a binary:
@@ -176,4 +174,3 @@ A Podcast ActivityStream Object can therefore look something like this:
   }
 }
 ```
-
