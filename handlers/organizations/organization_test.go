@@ -35,6 +35,31 @@ func TestGetOrganizationGives404s(t *testing.T) {
 	assert.Equal(t, 404, w.Code)
 }
 
+func TestGetOrganizationGives500s(t *testing.T) {
+	db, err := data.ConnectToTestDB()
+	if err != nil {
+		assert.NoError(t, err)
+		return
+	}
+	defer db.Close()
+
+	// Check if a route with no "{slug}" in the URL will return a 500
+	router := mux.NewRouter()
+	router.HandleFunc("/org/", Get) // Note that we don't have a {slug} here
+	r := httptest.NewRequest("GET", "https://localhost:8080/org/", nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, r)
+	assert.Equal(t, 500, w.Code)
+
+	// Check if a route setup with "{something-other-than-slug}" will return a 500
+	router = mux.NewRouter()
+	router.HandleFunc("/org/{something-other}", Get) // Note that we don't have a {slug} here
+	r = httptest.NewRequest("GET", "https://localhost:8080/org/boop", nil)
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, r)
+	assert.Equal(t, 500, w.Code)
+}
+
 func TestGetOrganization(t *testing.T) {
 	db, err := data.ConnectToTestDB()
 	if err != nil {

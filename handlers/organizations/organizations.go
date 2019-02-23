@@ -19,14 +19,14 @@ import (
 func Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	// Handle 400s
+	// These arrise from the server setting up the routes incorrectly
 	if vars == nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		http.Error(w, "Bad request", http.StatusInternalServerError)
 		return
 	}
 	slug := vars["slug"]
 	if slug == "" {
-		http.Error(w, "Bad request, no slug in url", http.StatusBadRequest)
+		http.Error(w, "Bad request, no slug in url", http.StatusInternalServerError)
 		return
 	}
 
