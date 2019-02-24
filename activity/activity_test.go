@@ -1,7 +1,6 @@
 package activity
 
 import (
-	"log"
 	"net/url"
 	"testing"
 
@@ -73,11 +72,7 @@ func TestMatchesURLSpec(t *testing.T) {
 }
 
 func TestHasFailsIfNothingExists(t *testing.T) {
-
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	var base = "https://podocasto.com:8080"
@@ -89,10 +84,7 @@ func TestHasFailsIfNothingExists(t *testing.T) {
 }
 
 func TestHasPassesIfSomethingExists(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	// Dummy data

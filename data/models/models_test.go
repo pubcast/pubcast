@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"testing"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/pubcast/pubcast/data"
@@ -28,6 +29,10 @@ func TestEmptyQueriesSucceed(t *testing.T) {
 
 	org, err := GetOrganization(db, "no-go")
 	assert.Nil(t, org)
+	assert.Nil(t, err)
+
+	pod, err := GetPodcast(db, "no-go")
+	assert.Nil(t, pod)
 	assert.Nil(t, err)
 }
 
@@ -113,4 +118,54 @@ func TestPutOrg(t *testing.T) {
 	assert.Equal(t, slug, org.Slug)
 	assert.Equal(t, "hats and ;DROP TABLES", org.Name)
 	assert.Equal(t, "<html>oh boy</html>", org.Note)
+}
+
+func sameDay(date1, date2 time.Time) bool {
+	y1, m1, d1 := date1.Date()
+	y2, m2, d2 := date2.Date()
+	return y1 == y2 && m1 == m2 && d1 == d2
+}
+
+func TestGetPodcast(t *testing.T) {
+	db, err := data.NewTestDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Populate the db with some dummy data
+	query := `
+		INSERT INTO podcasts (
+			slug,
+			name, 
+			note, 
+			thumbnail_url,
+			audio_url,
+			media_type,
+			posted_at
+		) values (
+			'foobang',
+			'FooBang',
+			'some note',
+			'https://foo.com/lang.png',
+			'https://audio.com/audio.mp3',
+			'mp3',
+			$1
+		)
+	`
+
+	now := time.Now()
+
+	_, err = db.Exec(query, now)
+	assert.NoError(t, err) // Inserts should succeed
+
+	pod, err := GetPodcast(db, "foobang")
+	assert.NoError(t, err)
+	assert.Equal(t, "foobang", pod.Slug)
+	assert.Equal(t, "FooBang", pod.Name)
+	assert.Equal(t, "some note", pod.Note)
+	assert.Equal(t, "https://foo.com/lang.png", pod.ThumbnailURL)
+	assert.Equal(t, "https://audio.com/audio.mp3", pod.AudioURL)
+	assert.Equal(t, "mp3", pod.MediaType)
+	assert.True(t, sameDay(now, pod.PostedAt))
 }

@@ -1,7 +1,6 @@
 package webfinger
 
 import (
-	"log"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -17,10 +16,7 @@ func init() {
 }
 
 func TestAtAddressCanFail(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	var tests = []struct {
@@ -55,10 +51,7 @@ func TestAtAddressCanFail(t *testing.T) {
 }
 
 func TestAtAddressReturnsNilIfNoAddress(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	actor, err := atAddress("m@iscool.org")
@@ -67,10 +60,7 @@ func TestAtAddressReturnsNilIfNoAddress(t *testing.T) {
 }
 
 func TestAtAddressReturnsOrgReferenceIfExists(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	slug, err := models.PutOrganization(db, "woo", "a note")

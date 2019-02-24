@@ -23,11 +23,7 @@ func init() {
 }
 
 func TestWebfingerBadRequests(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		assert.NoError(t, err)
-		return
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	var tests = []struct {
@@ -57,11 +53,7 @@ func TestWebfingerBadRequests(t *testing.T) {
 
 // Tests the _entirety_ of a successful webfinger request.
 func TestWebfingerSuccessfulRequest(t *testing.T) {
-	db, err := data.ConnectToTestDB()
-	if err != nil {
-		assert.NoError(t, err)
-		return
-	}
+	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	// Setup Config

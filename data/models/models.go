@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"net/url"
 	"time"
 
 	slugify "github.com/gosimple/slug"
@@ -111,4 +112,61 @@ type Podcast struct {
 	PostedAt     time.Time `json:"posted_at"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+// PutPodcast adds a podcast to the database
+// It generates a slug and posted_at timestamp
+func PutPodcast(
+	db *sql.DB,
+	name string,
+	note string,
+	thumbnailURL url.URL,
+	audioURL url.URL,
+	mediaType string,
+) (string, error) {
+	slug := slugify.MakeLang(name, "en")
+
+	query := `
+		INSERT INTO podcasts (
+			slug,
+			name, 
+			note, 
+			thumbnail_url, 
+			audio_url, 
+			media_type,
+			posted_at
+		) Values ($1, $2, $3, $4, $5, $6, $7)
+	`
+
+	_, err := db.Exec(query, slug, name, note, thumbnailURL, audioURL, mediaType, time.Now())
+	return slug, err
+}
+
+func GetPodcast(db *sql.DB, slug string) (*Podcast, error) {
+	row := db.QueryRow(`
+		select slug, name, note, thumbnail_url, audio_url, media_type, posted_at, created_at, updated_at from podcasts where slug = $1;
+	`, slug)
+
+	var pod Podcast
+	err := row.Scan(
+		&pod.Slug,
+		&pod.Name,
+		&pod.Note,
+		&pod.ThumbnailURL,
+		&pod.AudioURL,
+		&pod.MediaType,
+		&pod.PostedAt,
+		&pod.CreatedAt,
+		&pod.UpdatedAt,
+	)
+
+	// This is not an error from the user's perspective
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return &pod, nil
 }
