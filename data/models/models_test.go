@@ -2,7 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"log"
+	"net/url"
 	"testing"
 	"time"
 
@@ -18,9 +18,7 @@ func init() {
 
 func TestEmptyQueriesSucceed(t *testing.T) {
 	db, err := data.NewTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	group, err := GetGroup(db, "no-go")
@@ -38,9 +36,7 @@ func TestEmptyQueriesSucceed(t *testing.T) {
 
 func TestGetGroup(t *testing.T) {
 	db, err := data.NewTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	// Populate the db with some dummy data
@@ -62,9 +58,7 @@ func TestGetGroup(t *testing.T) {
 
 func TestPutGroup(t *testing.T) {
 	db, err := sql.Open("txdb", "identifier")
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	slug, err := PutGroup(db, "hats and ;DROP TABLES", "<html>oh boy</html>")
@@ -80,9 +74,7 @@ func TestPutGroup(t *testing.T) {
 
 func TestGetOrg(t *testing.T) {
 	db, err := data.NewTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	// Populate the db with some dummy data
@@ -104,9 +96,7 @@ func TestGetOrg(t *testing.T) {
 
 func TestPutOrg(t *testing.T) {
 	db, err := sql.Open("txdb", "identifier")
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	slug, err := PutOrganization(db, "hats and ;DROP TABLES", "<html>oh boy</html>")
@@ -128,9 +118,7 @@ func sameDay(date1, date2 time.Time) bool {
 
 func TestGetPodcast(t *testing.T) {
 	db, err := data.NewTestDB()
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 	defer db.Close()
 
 	// Populate the db with some dummy data
@@ -168,4 +156,26 @@ func TestGetPodcast(t *testing.T) {
 	assert.Equal(t, "https://audio.com/audio.mp3", pod.AudioURL)
 	assert.Equal(t, "mp3", pod.MediaType)
 	assert.True(t, sameDay(now, pod.PostedAt))
+}
+
+func TestPutPodcast(t *testing.T) {
+	db, err := data.NewTestDB()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	thumb, _ := url.Parse("https://thu.mb/nail.png")
+	audio, _ := url.Parse("https://audio.com/foo.mp3")
+
+	// Throw something in our db
+	slug, err := PutPodcast(db, "name game", "note", thumb, audio, mediaType("mp3"))
+	assert.NoError(t, err)
+	assert.Equal(t, "name-game", slug)
+
+	podcast, err := GetPodcast(db, slug)
+	assert.NoError(t, err)
+	assert.Equal(t, "name game", podcast.Name)
+	assert.Equal(t, "note", podcast.Note)
+	assert.Equal(t, thumb.String(), podcast.ThumbnailURL)
+	assert.Equal(t, audio.String(), podcast.AudioURL)
+	assert.Equal(t, mediaType("mp3"), podcast.MediaType)
 }

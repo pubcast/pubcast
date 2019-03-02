@@ -100,6 +100,16 @@ func PutOrganization(db *sql.DB, name string, note string) (string, error) {
 	return slug, err
 }
 
+// All supported media types
+type mediaType string
+
+const (
+	// mp3 is recommended
+	mp3 mediaType = "mp3"
+	m4a mediaType = "m4a"
+	ogg mediaType = "ogg"
+)
+
 // Podcast is a something with an audio link, a name, and a note
 // Refers to the Podcasts table in the database
 type Podcast struct {
@@ -108,7 +118,7 @@ type Podcast struct {
 	Note         string    `json:"note"`
 	ThumbnailURL string    `json:"thumbnail_url"`
 	AudioURL     string    `json:"audio_url"`
-	MediaType    string    `json:"media_type"`
+	MediaType    mediaType `json:"media_type"`
 	PostedAt     time.Time `json:"posted_at"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
@@ -120,9 +130,9 @@ func PutPodcast(
 	db *sql.DB,
 	name string,
 	note string,
-	thumbnailURL url.URL,
-	audioURL url.URL,
-	mediaType string,
+	thumbnailURL *url.URL,
+	audioURL *url.URL,
+	media mediaType,
 ) (string, error) {
 	slug := slugify.MakeLang(name, "en")
 
@@ -138,10 +148,11 @@ func PutPodcast(
 		) Values ($1, $2, $3, $4, $5, $6, $7)
 	`
 
-	_, err := db.Exec(query, slug, name, note, thumbnailURL, audioURL, mediaType, time.Now())
+	_, err := db.Exec(query, slug, name, note, thumbnailURL.String(), audioURL.String(), media, time.Now())
 	return slug, err
 }
 
+// GetPodcast queries a db looking for a podcast
 func GetPodcast(db *sql.DB, slug string) (*Podcast, error) {
 	row := db.QueryRow(`
 		select slug, name, note, thumbnail_url, audio_url, media_type, posted_at, created_at, updated_at from podcasts where slug = $1;
