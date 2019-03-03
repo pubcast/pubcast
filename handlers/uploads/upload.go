@@ -11,6 +11,7 @@ import (
 
 const maxUploadSizeInMegabytes = 1000
 
+// Upload let's a user add a file
 func Upload(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseMultipartForm(megabytes(maxUploadSizeInMegabytes))
@@ -28,41 +29,33 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	groups := r.MultipartForm.Value["group"]
-	if len(groups) != 0 {
+	if len(groups) != 1 {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	group := groups[0]
 
 	orgs := r.MultipartForm.Value["org"]
-	if len(orgs) != 0 {
+	if len(orgs) != 1 {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	org := orgs[0]
 
-	// group := r.MultipartForm.Value["group"]
-	// if group == "" {
-	// 	http.Error(w, "group missing from multipart form", http.StatusBadRequest)
-	// 	return
-	// }
+	names := r.MultipartForm.Value["name"]
+	if len(names) != 1 {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	name := names[0]
 
-	// org := handler.Header.Get("org")
-	// if org == "" {
-	// 	http.Error(w, "org missing from multipart form header", http.StatusBadRequest)
-	// 	return
-	// }
-
-	// name := handler.Header.Get("name")
-	// if name == "" {
-	// 	http.Error(w, "file missing from multipart form header", http.StatusBadRequest)
-	// 	return
-	// }
+	// Ensure that htis folder exists
+	rootDir := viper.GetString(config.UploadLocation)
+	orgDir := rootDir + "/" + group + "/" + org
+	os.MkdirAll(orgDir, os.ModePerm)
 
 	// Save the form file to a final output file
-	directory := viper.GetString(config.UploadLocation)
-	path := directory + "/" + group + "/" + org + "/" + name
-	outputFile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0666)
+	outputFile, err := os.OpenFile(orgDir+"/"+name, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		http.Error(w, "file failed to download", http.StatusInternalServerError)
 		return
@@ -70,6 +63,5 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer outputFile.Close()
 	io.Copy(outputFile, file)
 
-	// Return a response
-
+	// TODO return a response
 }
