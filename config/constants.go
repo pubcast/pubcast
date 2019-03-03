@@ -11,5 +11,5 @@ const (
 	ServerPort = "server.port"
 
 	// UploadLocation is where the podcast files are stored
-	UploadLocation = "~/.pubcast"
+	UploadLocation = "server.filepath"
 )
