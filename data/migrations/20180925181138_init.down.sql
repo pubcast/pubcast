@@ -1,1 +1,1 @@
-drop table if exists groups, organizations, podcasts;
+drop table if exists groups, shows, podcasts;

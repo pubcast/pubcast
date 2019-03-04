@@ -27,8 +27,8 @@ FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
--- Organizations Table
-CREATE TABLE "organizations"
+-- Shows Table
+CREATE TABLE "shows"
 (
     "id" SERIAL PRIMARY KEY,
     "slug" VARCHAR(64) NOT NULL UNIQUE,
@@ -39,9 +39,9 @@ CREATE TABLE "organizations"
     "group_id" INT REFERENCES groups(id) ON DELETE CASCADE
 );
 
---- Set timestamps for organizations
+--- Set timestamps for shows
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON "organizations"
+BEFORE UPDATE ON "shows"
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
@@ -58,7 +58,7 @@ CREATE TABLE "podcasts"
     "posted_at" TIMESTAMPTZ NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "organization_id" INT REFERENCES organizations(id) ON DELETE CASCADE
+    "show_id" INT REFERENCES shows(id) ON DELETE CASCADE
 );
 
 --- Set timestamps for podcasts

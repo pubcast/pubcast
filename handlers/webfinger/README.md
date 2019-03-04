@@ -1,6 +1,6 @@
 # What's Webfinger?
 
-[Webfinger](https://en.wikipedia.org/wiki/WebFinger), a protocol for discovering objects on the server. It's used by Mastodon and is important for interop'ing with Mastodon.
+[Webfinger](https://en.wikipedia.org/wiki/WebFinger), a protocol for discovering objects on the server. It's used by Mastodon and is important for interop'ing with Mastodon (and most ActivityPub servers).
 
 It lives at a special route: `GET /.well-known/webfinger`.
 
@@ -20,4 +20,4 @@ We can expect a webfinger response to always looks something like this:
 }
 ```
 
-In this case, `alice` would be the Organization `slug` and `my-example.com` is the domain of the server.
+In this case, `alice` is the ActivityPub Organization slug, and `my-example.com` is the domain of the server.

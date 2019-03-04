@@ -1,4 +1,4 @@
-package organizations
+package shows
 
 import (
 	"encoding/json"
@@ -12,10 +12,10 @@ import (
 	"github.com/pubcast/pubcast/handlers"
 )
 
-// Get returns an Organization
+// Get returns an Show
 //
 // Expects a `{slug}` url variable
-// in the route: `/api/org/{slug}`
+// in the route: `/api/show/{slug}`
 func Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
@@ -30,8 +30,8 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Attempt to grab the org
-	org, err := models.GetOrganization(data.GetPool(), slug)
+	// Attempt to grab the Show
+	show, err := models.GetShow(data.GetPool(), slug)
 
 	// 500 because something went wrong with the database
 	if err != nil {
@@ -39,20 +39,20 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 404 because something we couldn't find the organization
-	if org == nil {
+	// 404 because something we couldn't find the Show
+	if show == nil {
 		http.Error(w, slug+" does not exist on this server", http.StatusNotFound)
 		return
 	}
 
 	// Convert to an ActivityPub object
-	url, err := url.Parse(handlers.GetFullHostname() + "/api/org/" + slug)
-	actor := activity.NewOrganization(org.Name, url)
+	url, err := url.Parse(handlers.GetFullHostname() + "/api/show/" + slug)
+	actor := activity.NewOrganization(show.Name, url)
 
-	// Turn the org into JSON
+	// Turn the Show into JSON
 	bytes, err := json.Marshal(actor)
 
-	// 500 because something went wrong marshaling the org
+	// 500 because something went wrong marshaling the Show
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

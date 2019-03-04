@@ -1,7 +1,7 @@
 /*
-An address is a wrapper around the Organization actor type.
+An address is a wrapper around ActivityPub's Organization actor type. This is equivalent to Pubcast's Show type.
 
-To interop with the rest of the world, Organization's are given identifiers that look like this: "planet-money@ex-host-server.org".
+To interop with the rest of the world, Organizations/Shows are given identifiers that look like this: "planet-money@ex-host-server.org".
 
 Combined with webfinger, this is the outside world's way of finding a particular resource on our server.
 */
@@ -54,11 +54,11 @@ func atAddress(address string) (*Actor, error) {
 	//   and then just return a reference so we can get it again?"
 	//
 	// You would be right.
-	org, err := models.GetOrganization(data.GetPool(), slug)
+	show, err := models.GetShow(data.GetPool(), slug)
 	if err != nil {
 		return nil, err
 	}
-	if org == nil {
+	if show == nil {
 		return nil, nil
 	}
 
@@ -70,7 +70,7 @@ func atAddress(address string) (*Actor, error) {
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				HREF: domain + "/api/org/" + slug,
+				HREF: domain + "/api/show/" + slug,
 			},
 		},
 	}, nil

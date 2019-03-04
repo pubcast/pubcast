@@ -2,19 +2,20 @@ package groups
 
 import (
 	"encoding/json"
+	"net/http"
+	"net/url"
+
 	"github.com/gorilla/mux"
 	"github.com/pubcast/pubcast/activity"
 	"github.com/pubcast/pubcast/data"
 	"github.com/pubcast/pubcast/data/models"
 	"github.com/pubcast/pubcast/handlers"
-	"net/http"
-	"net/url"
 )
 
 // Get returns a Group
 //
 // Expects a `{slug}` url variable
-// in the route: `/api/org/{slug}`
+// in the route: `/api/group/{slug}`
 func Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
@@ -48,10 +49,10 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	url, err := url.Parse(handlers.GetFullHostname() + "/api/group/" + slug)
 	actor := activity.NewGroup(group.Name, url)
 
-	// Turn the org into JSON
+	// Turn the group into JSON
 	bytes, err := json.Marshal(actor)
 
-	// 500 because something went wrong marshaling the org
+	// 500 because something went wrong marshaling the group
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

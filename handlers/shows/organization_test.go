@@ -1,4 +1,4 @@
-package organizations
+package shows
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ func init() {
 	data.SetupTestDB()
 }
 
-func TestGetOrganizationGives404s(t *testing.T) {
+func TestGetShowGives404s(t *testing.T) {
 	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
@@ -26,93 +26,93 @@ func TestGetOrganizationGives404s(t *testing.T) {
 	router.HandleFunc("/org/{slug}", Get)
 
 	// Try and expect a 404
-	r := httptest.NewRequest("GET", "https://localhost:8080/org/i-dont-exist", nil)
+	r := httptest.NewRequest("GET", "https://localhost:8080/show/i-dont-exist", nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 	assert.Equal(t, 404, w.Code)
 }
 
-func TestGetOrganizationGives500s(t *testing.T) {
+func TestGetShowGives500s(t *testing.T) {
 	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	// Check if a route with no "{slug}" in the URL will return a 500
 	router := mux.NewRouter()
-	router.HandleFunc("/org/", Get) // Note that we don't have a {slug} here
-	r := httptest.NewRequest("GET", "https://localhost:8080/org/", nil)
+	router.HandleFunc("/show/", Get) // Note that we don't have a {slug} here
+	r := httptest.NewRequest("GET", "https://localhost:8080/show/", nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 	assert.Equal(t, 500, w.Code)
 
 	// Check if a route setup with "{something-other-than-slug}" will return a 500
 	router = mux.NewRouter()
-	router.HandleFunc("/org/{something-other}", Get) // Note that we don't have a {slug} here
-	r = httptest.NewRequest("GET", "https://localhost:8080/org/boop", nil)
+	router.HandleFunc("/show/{something-other}", Get) // Note that we don't have a {slug} here
+	r = httptest.NewRequest("GET", "https://localhost:8080/show/boop", nil)
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 	assert.Equal(t, 500, w.Code)
 }
 
-func TestGetOrganization(t *testing.T) {
+func TestGetShow(t *testing.T) {
 	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
-	// Setup a dummy org
+	// Setup a dummy show
 	note := "foo"
-	slug, err := models.PutOrganization(db, "planet", note)
+	slug, err := models.PutShow(db, "planet", note)
 	assert.Equal(t, "planet", slug) // sanity
 	assert.NoError(t, err)
 
 	// Setup a dummy router
 	router := mux.NewRouter()
-	router.HandleFunc("/api/org/{slug}", Get)
+	router.HandleFunc("/api/show/{slug}", Get)
 
-	// GET the /org
-	r := httptest.NewRequest("GET", "https://localhost:8080/api/org/"+slug, nil)
+	// GET the /show
+	r := httptest.NewRequest("GET", "https://localhost:8080/api/show/"+slug, nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 
 	// Expect a reasonable response
 	assert.Equal(t, 200, w.Code)
 
-	var org activity.Organization
-	err = json.Unmarshal(w.Body.Bytes(), &org)
+	var show activity.Organization
+	err = json.Unmarshal(w.Body.Bytes(), &show)
 	assert.NoError(t, err, w.Body.String()+" \n--failed to unmarshal")
 
-	assert.Equal(t, slug, org.Name)
+	assert.Equal(t, slug, show.Name)
 }
 
-func TestCreateOrganization(t *testing.T) {
+func TestCreateShow(t *testing.T) {
 	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
 	// Setup a dummy router
 	router := mux.NewRouter()
-	router.HandleFunc("/api/org", Create)
+	router.HandleFunc("/api/show", Create)
 
 	// Setup request body
-	body, err := json.Marshal(createOrganizationRequest{
+	body, err := json.Marshal(createShowRequest{
 		Name: "jims cool podcasts",
-		Note: "a cool podcast group",
+		Note: "a cool podcast show",
 	})
 	assert.NoError(t, err)
 
-	// POST /api/org
-	r := httptest.NewRequest("POST", "https://localhost:8080/api/org", bytes.NewReader(body))
+	// POST /api/show
+	r := httptest.NewRequest("POST", "https://localhost:8080/api/show", bytes.NewReader(body))
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, r)
 	assert.Equal(t, 200, w.Code)
 
 	// Expect to see a slug in the response
-	var response createOrganizationResponse
+	var response createShowResponse
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	assert.NoError(t, err)
 	assert.Equal(t, "jims-cool-podcasts", response.Slug)
 
 	// Expect to see something in the database
-	org, err := models.GetOrganization(db, "jims-cool-podcasts")
+	show, err := models.GetShow(db, "jims-cool-podcasts")
 	assert.NoError(t, err)
-	assert.Equal(t, "jims-cool-podcasts", org.Slug)
-	assert.Equal(t, "jims cool podcasts", org.Name)
-	assert.Equal(t, "a cool podcast group", org.Note)
+	assert.Equal(t, "jims-cool-podcasts", show.Slug)
+	assert.Equal(t, "jims cool podcasts", show.Name)
+	assert.Equal(t, "a cool podcast show", show.Note)
 }

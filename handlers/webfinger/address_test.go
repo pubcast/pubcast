@@ -59,11 +59,11 @@ func TestAtAddressReturnsNilIfNoAddress(t *testing.T) {
 	assert.Nil(t, actor)
 }
 
-func TestAtAddressReturnsOrgReferenceIfExists(t *testing.T) {
+func TestAtAddressReturnsShowReferenceIfExists(t *testing.T) {
 	db := data.ConnectToTestDB(t)
 	defer db.Close()
 
-	slug, err := models.PutOrganization(db, "woo", "a note")
+	slug, err := models.PutShow(db, "woo", "a note")
 	assert.Equal(t, "woo", slug) // Sanity check
 
 	actor, err := atAddress("woo@moo.org")
