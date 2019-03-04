@@ -12,7 +12,7 @@ import (
 	"github.com/pubcast/pubcast/handlers"
 )
 
-// Get returns an Show
+// Get returns a Show
 //
 // Expects a `{slug}` url variable
 // in the route: `/api/show/{slug}`
@@ -39,7 +39,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 404 because something we couldn't find the Show
+	// 404 because something we couldn't find the show
 	if show == nil {
 		http.Error(w, slug+" does not exist on this server", http.StatusNotFound)
 		return
@@ -49,10 +49,10 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	url, err := url.Parse(handlers.GetFullHostname() + "/api/show/" + slug)
 	actor := activity.NewOrganization(show.Name, url)
 
-	// Turn the Show into JSON
+	// Turn the show into JSON
 	bytes, err := json.Marshal(actor)
 
-	// 500 because something went wrong marshaling the Show
+	// 500 because something went wrong marshaling the show
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

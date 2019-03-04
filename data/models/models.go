@@ -8,7 +8,7 @@ import (
 	slugify "github.com/gosimple/slug"
 )
 
-// Group is a collection of Organizations
+// Group is a collection of Shows (equivalent to ActivityPub Organizations)
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-group
 // Also refers to the Groups table in the database
 type Group struct {
@@ -54,7 +54,7 @@ func PutGroup(db *sql.DB, name string, note string) (string, error) {
 	return slug, err
 }
 
-// A Show is someone who owns a episodes of podcasts
+// A Show is an entity that owns episodes of podcasts
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-organization
 // Also refers to the Show table in the database
 type Show struct {
@@ -65,7 +65,7 @@ type Show struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// GetShow gets an Show at any slug
+// GetShow gets a Show at any slug
 func GetShow(db *sql.DB, slug string) (*Show, error) {
 	row := db.QueryRow(`
 		SELECT slug, name, note, created_at, updated_at

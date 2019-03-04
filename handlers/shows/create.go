@@ -17,7 +17,7 @@ type createShowResponse struct {
 	Slug string `json:"slug"`
 }
 
-// Create adds an Show to the database
+// Create adds a Show to the database
 func Create(w http.ResponseWriter, r *http.Request) {
 	// Parse the body
 	b, err := ioutil.ReadAll(r.Body)
