@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
-	"github.com/pubcast/pubcast/handlers/organizations"
+	"github.com/pubcast/pubcast/handlers/shows"
 	"github.com/pubcast/pubcast/handlers/webfinger"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
@@ -22,8 +22,8 @@ func init() {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/.well-known/webfinger", webfinger.Get).Methods("GET")
-	r.HandleFunc("/api/org/{slug}", organizations.Get).Methods("GET")
-	r.HandleFunc("/api/org", organizations.Create).Methods("POST")
+	r.HandleFunc("/api/show/{slug}", shows.Get).Methods("GET")
+	r.HandleFunc("/api/show", shows.Create).Methods("POST")
 	r.HandleFunc("/health", healthHandler)
 
 	n := negroni.New()

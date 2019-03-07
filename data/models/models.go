@@ -8,7 +8,7 @@ import (
 	slugify "github.com/gosimple/slug"
 )
 
-// Group is a collection of Organizations
+// Group is a collection of Shows (equivalent to ActivityPub Organizations)
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-group
 // Also refers to the Groups table in the database
 type Group struct {
@@ -54,10 +54,10 @@ func PutGroup(db *sql.DB, name string, note string) (string, error) {
 	return slug, err
 }
 
-// Organization is someone who owns a episodes of podcasts
+// A Show is an entity that owns episodes of podcasts
 // Refers to the https://www.w3.org/TR/activitystreams-vocabulary/#dfn-organization
-// Also refers to the Organizations table in the database
-type Organization struct {
+// Also refers to the Show table in the database
+type Show struct {
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
 	Note      string    `json:"note"`
@@ -65,16 +65,16 @@ type Organization struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// GetOrganization gets an organization at any slug
-func GetOrganization(db *sql.DB, slug string) (*Organization, error) {
+// GetShow gets a Show at any slug
+func GetShow(db *sql.DB, slug string) (*Show, error) {
 	row := db.QueryRow(`
-		select slug, name, note, created_at, updated_at
-		from organizations where slug = $1
+		SELECT slug, name, note, created_at, updated_at
+		FROM shows WHERE slug = $1
 	`, slug)
 
-	var org Organization
-	err := row.Scan(&org.Slug,
-		&org.Name, &org.Note, &org.CreatedAt, &org.UpdatedAt)
+	var show Show
+	err := row.Scan(&show.Slug,
+		&show.Name, &show.Note, &show.CreatedAt, &show.UpdatedAt)
 
 	// This is not an error from the user's perspective
 	if err == sql.ErrNoRows {
@@ -84,15 +84,15 @@ func GetOrganization(db *sql.DB, slug string) (*Organization, error) {
 		return nil, err
 	}
 
-	return &org, nil
+	return &show, nil
 }
 
-// PutOrganization creates a group with this name and note
-func PutOrganization(db *sql.DB, name string, note string) (string, error) {
+// PutShow creates a show with this name and note
+func PutShow(db *sql.DB, name string, note string) (string, error) {
 	slug := slugify.MakeLang(name, "en")
 
 	query := `
-		INSERT INTO organizations (slug, name, note)
+		INSERT INTO shows (slug, name, note)
 		VALUES ($1, $2, $3)
 	`
 
@@ -139,10 +139,10 @@ func PutPodcast(
 	query := `
 		INSERT INTO podcasts (
 			slug,
-			name, 
-			note, 
-			thumbnail_url, 
-			audio_url, 
+			name,
+			note,
+			thumbnail_url,
+			audio_url,
 			media_type,
 			posted_at
 		) Values ($1, $2, $3, $4, $5, $6, $7)
@@ -155,7 +155,7 @@ func PutPodcast(
 // GetPodcast queries a db looking for a podcast
 func GetPodcast(db *sql.DB, slug string) (*Podcast, error) {
 	row := db.QueryRow(`
-		select slug, name, note, thumbnail_url, audio_url, media_type, posted_at, created_at, updated_at from podcasts where slug = $1;
+		SELECT slug, name, note, thumbnail_url, audio_url, media_type, posted_at, created_at, updated_at FROM podcasts WHERE slug = $1;
 	`, slug)
 
 	var pod Podcast

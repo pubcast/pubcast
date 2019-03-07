@@ -15,7 +15,7 @@ type Group struct {
 	Type    string   `json:"type"`
 }
 
-// NewOrganization creates an ActivityStreams Group
+// NewGroup creates an ActivityStreams Group
 func NewGroup(name string, id *url.URL) Group {
 	return Group{
 		Context: context,

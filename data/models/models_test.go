@@ -25,8 +25,8 @@ func TestEmptyQueriesSucceed(t *testing.T) {
 	assert.Nil(t, group)
 	assert.Nil(t, err)
 
-	org, err := GetOrganization(db, "no-go")
-	assert.Nil(t, org)
+	show, err := GetShow(db, "no-go")
+	assert.Nil(t, show)
 	assert.Nil(t, err)
 
 	pod, err := GetPodcast(db, "no-go")
@@ -72,42 +72,42 @@ func TestPutGroup(t *testing.T) {
 	assert.Equal(t, "<html>oh boy</html>", group.Note)
 }
 
-func TestGetOrg(t *testing.T) {
+func TestGetShow(t *testing.T) {
 	db, err := data.NewTestDB()
 	assert.NoError(t, err)
 	defer db.Close()
 
 	// Populate the db with some dummy data
 	query := `
-		INSERT INTO organizations (slug, name, note)
+		INSERT INTO shows (slug, name, note)
 		VALUES ('kitty', 'Cat', 'I like cats')
 	`
 	_, err = db.Exec(query)
 	assert.Nil(t, err) // Inserts should succeed
 
-	org, err := GetOrganization(db, "kitty")
+	show, err := GetShow(db, "kitty")
 	assert.Nil(t, err)
-	assert.NotNil(t, org)
+	assert.NotNil(t, show)
 
-	assert.Equal(t, "kitty", org.Slug, "Org slug should match")
-	assert.Equal(t, "Cat", org.Name, "Org name should match")
-	assert.Equal(t, "I like cats", org.Note, "Org note should match")
+	assert.Equal(t, "kitty", show.Slug, "Show slug should match")
+	assert.Equal(t, "Cat", show.Name, "Show name should match")
+	assert.Equal(t, "I like cats", show.Note, "Show note should match")
 }
 
-func TestPutOrg(t *testing.T) {
+func TestPutShow(t *testing.T) {
 	db, err := sql.Open("txdb", "identifier")
 	assert.NoError(t, err)
 	defer db.Close()
 
-	slug, err := PutOrganization(db, "hats and ;DROP TABLES", "<html>oh boy</html>")
+	slug, err := PutShow(db, "hats and ;DROP TABLES", "<html>oh boy</html>")
 	assert.Nil(t, err)
 
-	org, err := GetOrganization(db, slug)
+	show, err := GetShow(db, slug)
 	assert.Nil(t, err)
 
-	assert.Equal(t, slug, org.Slug)
-	assert.Equal(t, "hats and ;DROP TABLES", org.Name)
-	assert.Equal(t, "<html>oh boy</html>", org.Note)
+	assert.Equal(t, slug, show.Slug)
+	assert.Equal(t, "hats and ;DROP TABLES", show.Name)
+	assert.Equal(t, "<html>oh boy</html>", show.Note)
 }
 
 func sameDay(date1, date2 time.Time) bool {
@@ -125,8 +125,8 @@ func TestGetPodcast(t *testing.T) {
 	query := `
 		INSERT INTO podcasts (
 			slug,
-			name, 
-			note, 
+			name,
+			note,
 			thumbnail_url,
 			audio_url,
 			media_type,
@@ -154,8 +154,8 @@ func TestGetPodcast(t *testing.T) {
 	assert.Equal(t, "some note", pod.Note)
 	assert.Equal(t, "https://foo.com/lang.png", pod.ThumbnailURL)
 	assert.Equal(t, "https://audio.com/audio.mp3", pod.AudioURL)
-	assert.Equal(t, "mp3", pod.MediaType)
-	assert.True(t, sameDay(now, pod.PostedAt))
+	assert.Equal(t, mediaType("mp3"), pod.MediaType)
+	assert.True(t, sameDay(now.UTC(), pod.PostedAt))
 }
 
 func TestPutPodcast(t *testing.T) {

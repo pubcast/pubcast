@@ -82,6 +82,8 @@ You send messages called `ActivityStreams` that are really just a special spec o
 
 #### Objects, Actors, and Activities
 
+(**Note:** Pubcast uses a slightly different internal naming than ActivityPub. To have more understandable code in the context of podcasts, ActivityPub's `Organization` actor type is a `Show` inside Pubcast. Additionally, the `Object` type is a Pubcast `Episode`.)
+
 ActivityPub is based on [a formalized vocabulary](https://www.w3.org/TR/activitystreams-vocabulary/) of data types, actions and folks doing the actions.
 
 An `Object` is a generic data type written in JSON:

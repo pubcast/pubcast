@@ -15,7 +15,7 @@ test:
 	go test $(PKGS) -cover
 
 
-# ----- Database ----- # 
+# ----- Database ----- #
 
 # Installs our db migration tool
 $(GOPATH)/bin/migrate:
@@ -29,7 +29,7 @@ $(GOPATH)/bin/migrate:
 migration:
 	migrate create -dir data/migrations -ext sql $$NAME
 
-# Creates a test and local database 
+# Creates a test and local database
 .PHONY: database
 database:
 	./scripts/create_db.sh
@@ -37,8 +37,8 @@ database:
 # Migrates the database up to the newest version
 migrate-up: database $(GOPATH)/bin/migrate
 	# We use ?sslmode=disable to accommodate for crappy brew installs
-	migrate -source file://data/migrations -database postgres://localhost:5432/pubcast?sslmode=disable up
-	migrate -source file://data/migrations -database postgres://localhost:5432/pubcast_test?sslmode=disable up
+	migrate -source file://data/migrations -database postgres://postgres@localhost:5432/pubcast?sslmode=disable up
+	migrate -source file://data/migrations -database postgres://postgres@localhost:5432/pubcast_test?sslmode=disable up
 	@echo "✨ Finished."
 
 # Removes the current connected databases
@@ -55,7 +55,7 @@ IMG := ${NAME}:${TAG}
 LATEST := ${NAME}:latest
 
 # Makes a new docker image
-image: 
+image:
 	docker build -t ${IMG} .
 	docker tag ${IMG} ${LATEST}
 

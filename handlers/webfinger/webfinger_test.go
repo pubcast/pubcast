@@ -13,7 +13,7 @@ import (
 	"github.com/pubcast/pubcast/config"
 	"github.com/pubcast/pubcast/data"
 	"github.com/pubcast/pubcast/data/models"
-	"github.com/pubcast/pubcast/handlers/organizations"
+	"github.com/pubcast/pubcast/handlers/shows"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -60,9 +60,9 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	viper.SetDefault(config.ServerHostname, "localhost")
 	viper.SetDefault(config.ServerPort, "8080")
 
-	// Setup a dummy organization
+	// Setup a dummy org/show
 	note := "bloop"
-	slug, err := models.PutOrganization(db, "slurp", note)
+	slug, err := models.PutShow(db, "slurp", note)
 	assert.Equal(t, "slurp", slug) // sanity test
 	assert.NoError(t, err)
 
@@ -82,7 +82,7 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &actor)
 	assert.NoError(t, err)
 	assert.Equal(t, slug+"@fooman.org", actor.Subject)
-	assert.Equal(t, "https://localhost:8080/api/org/slurp", actor.Links[0].HREF)
+	assert.Equal(t, "https://localhost:8080/api/show/slurp", actor.Links[0].HREF)
 	assert.Equal(t, "self", actor.Links[0].Rel)
 	assert.Equal(t, "application/activity+json", actor.Links[0].Type)
 
@@ -93,13 +93,13 @@ func TestWebfingerSuccessfulRequest(t *testing.T) {
 	w = httptest.NewRecorder()
 	router := mux.NewRouter()
 	fmt.Println(actor.Links[0].HREF)
-	router.HandleFunc("/api/org/{slug}", organizations.Get)
+	router.HandleFunc("/api/show/{slug}", shows.Get)
 	router.ServeHTTP(w, r)
 
-	// Expect a reasonable response from the org
+	// Expect a reasonable response from the show
 	assert.Equal(t, 200, w.Code)
 
-	// Finally, check that we can correctly get an organization
+	// Finally, check that we can correctly get an org/show
 	var org activity.Organization
 	err = json.Unmarshal(w.Body.Bytes(), &org)
 	assert.NoError(t, err, w.Body.String()+" \n--failed to unmarshal")
