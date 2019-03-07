@@ -63,5 +63,4 @@ func TestUploadToTmpFile(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 
 	fmt.Println(w.Body.String())
-
 }
